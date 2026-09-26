@@ -1,0 +1,166 @@
+/* =========================================================================
+   Resto IA — socle.
+   Ce fichier ne contient QUE ce qui n'appartient à aucune application :
+   la scène, l'écran de connexion / compte démo, et le toast système.
+
+   Il n'y a ici aucun composant d'interface applicative — pas de carte, pas
+   de pastille, pas de barre d'onglets, pas de bouton propre à une appli.
+   Chaque application apporte sa propre feuille (cuisine.css, gerant.css,
+   commercial.css) et ne partage rien avec les deux autres.
+
+   Pas de maquette de téléphone décorative (bordure, encoche) : l'appli
+   remplit l'écran réel, comme une vraie appli installée le ferait. Sur un
+   écran large, une colonne centrée garde des proportions de téléphone sans
+   prétendre en dessiner un.
+   ========================================================================= */
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;background:#0A0A0B;color:#EDEDEF;
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  -webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;
+  overflow-x:hidden;
+}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+:focus-visible{outline:2px solid #6E8BFF;outline-offset:3px}
+
+/* -------------------------------- écran -------------------------------- */
+.device{
+  position:relative;width:100%;max-width:480px;height:100dvh;margin:0 auto;
+  background:#000;overflow:hidden;
+}
+.glass{position:absolute;inset:0;overflow:hidden;display:flex;flex-direction:column;background:#000}
+.scene{position:absolute;inset:0;display:flex;flex-direction:column;overflow:hidden;background:#000}
+
+/* Indicateur de fermeture — plus une vraie barre système que le vestige
+   d'une maquette de téléphone : cliquer dessus ferme l'application ouverte,
+   comme le fait le geste équivalent sur un vrai appareil. */
+.homebar{
+  position:absolute;left:0;right:0;bottom:0;height:22px;z-index:60;
+  display:grid;place-items:center;padding-bottom:env(safe-area-inset-bottom);
+}
+.homebar i{
+  width:128px;height:5px;border-radius:3px;background:rgba(255,255,255,.34);
+  transition:background .2s,transform .15s;display:block;
+}
+.homebar:hover i{background:rgba(255,255,255,.62)}
+.homebar:active i{transform:scaleX(.9)}
+
+/* --------------------------- connexion / démo --------------------------- */
+.home{
+  position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;
+  padding:calc(48px + env(safe-area-inset-top)) 26px calc(26px + env(safe-area-inset-bottom));
+  background:
+    radial-gradient(115% 70% at 50% -6%, #1C2B4A 0%, transparent 56%),
+    radial-gradient(90% 55% at 12% 104%, #2A1F33 0%, transparent 62%),
+    linear-gradient(170deg,#0D1017,#08090C 62%,#0E0B10);
+  transition:opacity .3s ease, transform .38s cubic-bezier(.3,.8,.3,1), filter .3s ease;
+}
+.home.away{opacity:0;transform:scale(.94);filter:blur(2px);pointer-events:none}
+
+.hbrand{flex:none;display:flex;flex-direction:column;align-items:center;gap:6px;padding-bottom:40px}
+.hbrand-sm{padding-bottom:28px}
+.hlogo{width:52px;height:52px;margin-bottom:6px;object-fit:contain}
+.hbrand b{font-family:'Outfit',sans-serif;font-size:22px;font-weight:600;color:#fff;letter-spacing:.01em}
+.hbrand span{font-size:12.5px;color:rgba(255,255,255,.5);letter-spacing:.02em}
+
+/* écran 1 : connexion */
+.hform{flex:none;display:flex;flex-direction:column;gap:10px}
+.hchamp{
+  height:48px;padding:0 16px;border-radius:12px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+  color:#fff;font-family:'Inter',sans-serif;font-size:14.5px;
+}
+.hchamp::placeholder{color:rgba(255,255,255,.36)}
+.hchamp:focus{outline:none;border-color:rgba(255,255,255,.3)}
+.hbtn{
+  height:48px;border-radius:12px;margin-top:6px;background:#fff;color:#0B0D12;
+  font-size:14.5px;font-weight:600;display:flex;align-items:center;justify-content:center;
+}
+.hbtn:hover{background:#F2F2F3}
+.hbtn2{
+  height:48px;border-radius:12px;border:1px solid rgba(255,255,255,.16);color:#fff;
+  font-size:14.5px;font-weight:600;display:flex;align-items:center;justify-content:center;
+}
+.hbtn2:hover{border-color:rgba(255,255,255,.32)}
+.hdemo{
+  margin-top:auto;flex:none;align-self:center;
+  font-size:13px;font-weight:600;letter-spacing:.02em;color:rgba(255,255,255,.5);padding:14px 8px;
+}
+.hdemo:hover{color:#fff}
+
+/* connexion réelle : messages, lien tablette, attente d'autorisation */
+.hmsg{margin:2px 2px 0;font-size:13px;line-height:1.5;color:#FF9F8A}
+.hmsg-ok{color:#8FD9A8}
+.hinfo{margin:0 2px 6px;font-size:13px;line-height:1.55;color:rgba(255,255,255,.62)}
+.hlien{
+  flex:none;align-self:center;margin-top:18px;padding:10px 8px;
+  font-size:13px;font-weight:600;color:rgba(255,255,255,.78);text-decoration:underline;text-underline-offset:4px;
+}
+.hlien:hover{color:#fff}
+.hcode{font-family:'IBM Plex Mono',monospace;letter-spacing:.12em;text-transform:uppercase}
+.hattente{margin:0 0 8px;font-size:13.5px;line-height:1.6;color:rgba(255,255,255,.7)}
+.hattente b{display:block;margin-bottom:6px;font-size:16px;color:#fff}
+.hform button:disabled{opacity:.55}
+
+/* page d'arrivée du lien de confirmation (e-mail) */
+.hconf{flex:1;display:flex;flex-direction:column;justify-content:center;gap:0;text-align:center;animation:hconf-in .5s cubic-bezier(.2,.8,.3,1) both}
+.hconf-logo{position:relative;align-self:center;width:92px;height:92px;border-radius:26px;display:grid;place-items:center;
+  background:linear-gradient(150deg,#fffaf2,#f3e2cc);box-shadow:0 0 0 1px rgba(255,255,255,.08),0 18px 50px rgba(233,122,55,.28),0 0 90px rgba(233,122,55,.18)}
+.hconf-logo img{width:58px;height:58px;object-fit:contain}
+.hconf-ok{position:absolute;right:-9px;bottom:-9px;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;
+  background:#34A86B;color:#fff;box-shadow:0 0 0 4px #0B0D12,0 6px 16px rgba(52,168,107,.45);animation:hconf-ok .45s .25s cubic-bezier(.3,1.6,.5,1) both}
+.hconf-kicker{margin:30px 0 8px;font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#F0A06B}
+.hconf-titre{margin:0 0 12px;font:400 30px/1.15 Georgia,'Times New Roman',serif;color:#fff;letter-spacing:-.01em}
+.hconf-texte{margin:0 auto 24px;max-width:300px;font-size:14.5px;line-height:1.6;color:rgba(255,255,255,.66)}
+.hconf-carte{margin:0 0 18px;padding:16px 18px;border-radius:16px;text-align:left;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1)}
+.hconf-carte b{display:block;margin-bottom:8px;font-size:13.5px;font-weight:600;color:#fff}
+.hconf-carte ol{margin:0;padding-left:20px;font-size:13.5px;line-height:1.75;color:rgba(255,255,255,.7)}
+.hconf-note{margin:14px 0 0;font-size:12.5px;line-height:1.5;color:rgba(255,255,255,.42)}
+@keyframes hconf-in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes hconf-ok{from{opacity:0;transform:scale(.3)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.hconf,.hconf-ok{animation:none}}
+
+/* écran 2 : postes du compte démo */
+.hliste{flex:1;min-height:0;overflow:auto;scrollbar-width:none;display:flex;flex-direction:column;gap:10px}
+.hliste::-webkit-scrollbar{display:none}
+.hposte{
+  display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:16px;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);transition:background .15s;
+}
+.hposte:hover{background:rgba(255,255,255,.09)}
+.hposte:active{transform:scale(.98)}
+.hposte .ic{
+  position:relative;width:44px;height:44px;flex:none;border-radius:12px;display:grid;place-items:center;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18);
+}
+.hposte .ic svg{width:22px;height:22px}
+.hposte .bdg{
+  position:absolute;top:-5px;right:-5px;min-width:18px;height:18px;padding:0 5px;
+  border-radius:9px;background:#FF453A;color:#fff;font-size:10px;font-weight:700;
+  display:grid;place-items:center;box-shadow:0 0 0 2px #0E141B;
+}
+.hposte .tx{display:flex;flex-direction:column;gap:2px;text-align:left}
+.hposte .tx b{font-size:14.5px;font-weight:600;color:#fff}
+.hposte .tx small{font-size:12px;color:rgba(255,255,255,.42)}
+.hdeco{
+  flex:none;align-self:center;margin-top:14px;
+  font-size:12.5px;font-weight:600;letter-spacing:.02em;color:rgba(255,255,255,.4);padding:10px 8px;
+}
+.hdeco:hover{color:rgba(255,255,255,.7)}
+
+/* ------------------------------ toast système ------------------------------ */
+.toast{
+  position:absolute;left:50%;bottom:44px;transform:translate(-50%,10px);
+  z-index:90;max-width:84%;padding:11px 16px;border-radius:11px;
+  background:rgba(22,22,24,.96);color:#F4F4F5;font-size:13px;line-height:1.4;
+  box-shadow:0 18px 44px -18px #000, 0 0 0 1px rgba(255,255,255,.1);
+  opacity:0;pointer-events:none;transition:opacity .2s, transform .24s cubic-bezier(.3,.8,.3,1);
+  text-align:center;
+}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}

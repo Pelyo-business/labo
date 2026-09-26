@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resto IA — Application gérant · trois directions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Outfit:wght@200;300;400;500&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+   PLANCHE — chrome neutre. Ne doit rien apporter aux maquettes.
+   ===================================================================== */
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:#EFEEEA;color:#1C1C1A;
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:52px 24px 110px}
+.board-head{border-bottom:1px solid #D6D4CE;padding-bottom:22px;margin-bottom:54px}
+.board-head h1{font-size:19px;font-weight:600;letter-spacing:-.01em;margin:0 0 6px}
+.board-head p{font-size:13px;line-height:1.55;color:#6C6A63;margin:0;max-width:52ch}
+.dir{margin-bottom:82px}
+.dir-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.dir-letter{font-size:13px;font-weight:600;letter-spacing:.2em;color:#9A978E}
+.dir-name{font-size:17px;font-weight:600;letter-spacing:-.01em}
+.dir-meta{font-size:12px;color:#8E8B83;margin:0 0 30px}
+
+.screens{display:flex;flex-wrap:wrap;gap:26px;justify-content:center;align-items:flex-start}
+.unit{display:flex;flex-direction:column;gap:9px;width:calc(390px * var(--k))}
+.slot{width:calc(390px * var(--k));height:calc(844px * var(--k))}
+.cap{font-size:11px;color:#8E8B83;letter-spacing:.02em;text-align:center}
+.dev{width:390px;height:844px;transform:scale(var(--k));transform-origin:top left;overflow:hidden;position:relative}
+
+:root{--k:.78}
+@media (max-width:1150px){:root{--k:.64}}
+@media (max-width:900px){:root{--k:.84}.wrap{padding:36px 16px 80px}.dir{margin-bottom:64px}}
+
+.notes{margin:30px auto 0;max-width:780px;border-top:1px solid #D6D4CE;padding-top:16px}
+.notes div{display:flex;gap:14px;font-size:12.5px;line-height:1.6;padding:5px 0}
+.notes b{flex:0 0 78px;font-weight:600;color:#9A978E;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;padding-top:3px}
+.notes span{color:#3A3834}
+
+/* =====================================================================
+   DIRECTION A — « Journal du soir ». Ivoire, encre, une colonne,
+   filets pleine largeur. Aucun bloc, aucune ombre, aucun arrondi.
+   ===================================================================== */
+.ph-a{border-radius:16px;border:1px solid #23211C;background:#FBF8F2}
+.a-page{height:100%;overflow:hidden;padding:0 30px 24px;color:#17150F;
+  font-family:"Source Sans 3",sans-serif}
+.a-status{display:flex;justify-content:space-between;align-items:center;
+  height:44px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#17150F}
+.a-mast{text-align:center}
+.a-rulefat{border-top:2px solid #17150F}
+.a-rule{border-top:1px solid #C9C1AE;margin:11px 0}
+.a-mast-name{font-family:"Libre Baskerville",Georgia,serif;font-size:21px;letter-spacing:.01em;padding:9px 0 4px}
+.a-mast-sub{font-size:10px;letter-spacing:.17em;text-transform:uppercase;color:#6B6353;padding-bottom:9px}
+.a-som{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #17150F}
+.a-som a{font-size:9.5px;letter-spacing:.17em;text-transform:uppercase;color:#7A7263;text-decoration:none}
+.a-som a.on{color:#17150F;border-bottom:1.5px solid #17150F;padding-bottom:2px}
+.a-eyebrow{font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:#8A7F68;margin:16px 0 8px}
+.a-h1{font-family:"Libre Baskerville",Georgia,serif;font-weight:700;font-size:27px;
+  line-height:1.2;letter-spacing:-.01em;margin:8px 0 8px}
+.a-h1.sm{font-size:23px}
+.a-chapo{font-family:"Libre Baskerville",Georgia,serif;font-style:italic;font-size:13.5px;
+  line-height:1.58;color:#3B3527;margin:0 0 12px}
+.a-p{font-size:12.8px;line-height:1.62;color:#2A251A;margin:0 0 9px;font-weight:300}
+.a-p b{font-weight:600}
+.a-p.small{font-size:12px;line-height:1.6;color:#4A4335}
+.a-inter{font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:#17150F;margin:0 0 8px}
+.a-fig{display:flex;align-items:baseline;gap:9px;margin:0 0 10px}
+.a-fig-n{font-family:"Libre Baskerville",Georgia,serif;font-size:58px;line-height:.86;letter-spacing:-.03em}
+.a-fig-u{font-family:"Libre Baskerville",Georgia,serif;font-style:italic;font-size:15px;color:#5C5343}
+.a-jline{display:flex;gap:12px;font-size:12px;line-height:1.45;padding:6px 0;
+  border-bottom:1px solid #E2DBC8;font-weight:300}
+.a-jline:last-child{border-bottom:0}
+.a-jt{flex:0 0 52px;font-variant-numeric:tabular-nums;color:#7A7263;font-size:11px;letter-spacing:.04em;padding-top:1px}
+.a-jx{flex:1}
+.a-jx i{font-style:normal;color:#6B6353}
+.a-jv{font-variant-numeric:tabular-nums;color:#17150F}
+.a-actions{display:flex;flex-wrap:wrap;gap:18px;padding-top:4px}
+.a-actions a{font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:#17150F;
+  text-decoration:none;border-bottom:1px solid #17150F;padding-bottom:2px}
+/* transcription en dialogue de journal */
+.a-line{font-size:11.9px;line-height:1.5;margin:0 0 7px;font-weight:300;color:#2A251A}
+.a-t{font-variant-numeric:tabular-nums;color:#9A9179;font-size:10.5px;letter-spacing:.06em;margin-right:7px}
+.a-who{font-size:9.5px;letter-spacing:.17em;text-transform:uppercase;color:#17150F;margin-right:6px}
+.a-cart{font-family:"Libre Baskerville",Georgia,serif;font-style:italic;font-size:11.3px;
+  line-height:1.45;color:#6B5E42;margin:0 0 7px;padding-left:26px}
+.a-sms{font-size:11.3px;line-height:1.55;color:#3B3527;white-space:pre-line;font-weight:300;margin:0 0 8px}
+.a-end{font-family:"Libre Baskerville",Georgia,serif;font-size:12.2px;line-height:1.5;margin:0 0 10px}
+
+/* =====================================================================
+   DIRECTION B — « Console silencieuse ». Anthracite mat, un seul
+   accent cuivre. Hiérarchie par la taille et l'opacité, rien d'autre.
+   ===================================================================== */
+.ph-b{border-radius:42px;border:1px solid #2B2B2B;background:#141414}
+.b-page{height:100%;overflow:hidden;background:#141414;color:#F2EFEA;
+  font-family:Outfit,sans-serif;display:flex;flex-direction:column;padding:0 30px 30px}
+.b-status{height:46px;display:flex;align-items:center;justify-content:space-between;
+  font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;opacity:.3;font-weight:300}
+.b-top{font-size:9.5px;letter-spacing:.26em;text-transform:uppercase;opacity:.34;font-weight:300;padding-top:6px}
+.b-center{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+.b-mode{font-size:86px;font-weight:200;letter-spacing:-.045em;line-height:.95}
+.b-mode.mid{font-size:70px}
+.b-delay{font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:#C98A5B;margin-top:20px;font-weight:400}
+.b-say{font-size:12.5px;line-height:1.6;opacity:.38;font-weight:300;max-width:250px;margin-top:22px}
+.b-foot{display:flex;flex-direction:column;gap:13px;align-items:center;text-align:center}
+.b-dial{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;
+  font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:300}
+.b-dial span{opacity:.24}
+.b-dial span.on{opacity:1;color:#C98A5B}
+.b-micro{font-size:10px;line-height:1.7;opacity:.3;font-weight:300;letter-spacing:.02em;max-width:280px}
+.b-micro.dim{opacity:.18}
+.b-act{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:#C98A5B;font-weight:400;padding-top:4px}
+/* feuille de rejeu */
+.b-total{font-size:64px;font-weight:200;letter-spacing:-.04em;line-height:1;text-align:center;padding-top:26px}
+.b-basket{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#C98A5B;
+  text-align:center;margin-top:14px;font-weight:300;line-height:1.7}
+.b-tr{flex:1;padding-top:26px;display:flex;flex-direction:column;gap:11px;overflow:hidden}
+.b-bot{font-size:12px;line-height:1.52;opacity:.42;font-weight:300;margin:0;max-width:290px}
+.b-me{font-size:14px;line-height:1.45;opacity:.95;font-weight:300;margin:0 0 0 auto;max-width:280px;text-align:right}
+.b-sys{font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:#C98A5B;opacity:.72;margin:0;font-weight:300}
+.b-smslab{font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:#C98A5B;opacity:.8;margin:0 0 9px;font-weight:300}
+.b-sms{font-size:10.5px;line-height:1.75;opacity:.34;font-weight:300;white-space:pre-line;margin:0}
+.b-block{padding-top:18px}
+.b-name{font-size:76px;font-weight:200;letter-spacing:-.045em;line-height:1}
+
+/* =====================================================================
+   DIRECTION C — « Fiche d'établissement ». Blanc pur, gris froids,
+   une encre bleue. Grille stricte, lignes clé / valeur, filets.
+   ===================================================================== */
+.ph-c{border-radius:12px;border:1px solid #DCDFE5;background:#FFFFFF}
+.c-page{height:100%;overflow:hidden;background:#fff;color:#0C1116;
+  font-family:Inter,sans-serif;padding:0 22px 6px;font-feature-settings:"tnum" 1}
+.c-status{height:32px;display:flex;align-items:center;justify-content:space-between;
+  font-size:10px;color:#9AA3AE;font-variant-numeric:tabular-nums}
+.c-head{padding:0 0 9px;border-bottom:1px solid #0C1116}
+.c-title{font-size:16px;font-weight:600;letter-spacing:-.015em;margin:0 0 2px}
+.c-subtitle{font-size:11.5px;color:#7A838E;margin:0}
+.c-tag{font-size:10px;color:#1B4DE4;font-weight:500;letter-spacing:.02em;margin-top:4px;display:inline-block}
+.c-sec{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:#98A1AC;
+  font-weight:600;padding:12px 0 4px}
+.c-row{display:flex;justify-content:space-between;align-items:baseline;gap:14px;
+  padding:5px 0;border-bottom:1px solid #EDF0F3}
+.c-k{font-size:11.5px;line-height:1.35;color:#434C56;display:flex;flex-direction:column;gap:1px}
+.c-k em{font-style:normal;font-size:10px;line-height:1.3;color:#9AA3AE}
+.c-v{font-size:11.5px;font-weight:500;color:#0C1116;font-variant-numeric:tabular-nums;
+  text-align:right;white-space:nowrap}
+.c-v.blue{color:#1B4DE4}
+.c-v.mute{font-weight:400;color:#7A838E}
+.c-full{font-size:11px;line-height:1.55;color:#5C656F;padding:7px 0;border-bottom:1px solid #EDF0F3}
+.c-note{font-size:10px;line-height:1.55;color:#98A1AC;padding:8px 0 0}
+.c-act{display:flex;align-items:center;gap:16px;padding:9px 0 0}
+.c-btn{font-family:inherit;font-size:11px;font-weight:500;color:#fff;background:#1B4DE4;
+  border:0;border-radius:3px;padding:6px 11px;letter-spacing:.01em}
+.c-btn.ghost{background:#fff;color:#0C1116;border:1px solid #D5DAE1}
+.c-lnk{font-size:11px;color:#1B4DE4;text-decoration:none;font-weight:500}
+.c-tr{display:grid;grid-template-columns:38px 1fr;gap:9px;padding:4px 0;border-bottom:1px solid #EDF0F3}
+.c-tt{font-size:10.5px;color:#9AA3AE;font-variant-numeric:tabular-nums;padding-top:1px}
+.c-tx{font-size:11px;line-height:1.45;color:#2B333C}
+.c-tx em{display:block;font-style:normal;font-size:9.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:#98A1AC;margin-bottom:2px}
+.c-tx.ai em{color:#1B4DE4}
+.c-pre{font-size:10.5px;line-height:1.55;color:#5C656F;white-space:pre-line;
+  padding:7px 0;border-bottom:1px solid #EDF0F3}
+.c-tot{display:flex;justify-content:space-between;align-items:baseline;padding:7px 0;border-top:1px solid #0C1116}
+.c-tot span:first-child{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#434C56;font-weight:600}
+.c-tot span:last-child{font-size:15px;font-weight:600;font-variant-numeric:tabular-nums}
+.c-3{display:grid;grid-template-columns:1fr auto auto;gap:14px;align-items:baseline;
+  padding:6px 0;border-bottom:1px solid #EDF0F3}
+.c-3 b{font-size:12px;font-weight:500}
+.c-3 i{font-style:normal;font-size:11.5px;color:#7A838E;font-variant-numeric:tabular-nums;text-align:right;min-width:56px}
+.c-3 u{text-decoration:none;font-size:12px;font-weight:500;font-variant-numeric:tabular-nums;text-align:right;min-width:60px}
+.c-3.on b,.c-3.on u{color:#1B4DE4}
+.c-bar{height:3px;background:#EDF0F3;margin:4px 0 0;position:relative}
+.c-bar span{position:absolute;left:0;top:0;bottom:0;width:49%;background:#1B4DE4}
+</style>
+<meta name="robots" content="noindex, nofollow"><style>.envb{position:fixed;top:0;left:0;right:0;z-index:99999;height:20px;display:flex;align-items:center;justify-content:center;gap:8px;background:#4F8BD4;color:#0B0B0C;font:600 10px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.14em;pointer-events:none}body{padding-top:20px!important} print{.envb{display:none}}</style></head>
+<body><div class="envb">LABO · v1.0.0+6e4ad0a</div>
+<div class="wrap">
+
+  <div class="board-head">
+    <h1>Resto IA — Application gérant</h1>
+    <p>Trois directions visuelles, trois écrans chacune : l’ouverture du service, le rejeu d’un appel, un réglage. Maquettes statiques, contenu réel de Snack Le Comptoir.</p>
+  </div>
+
+  <!-- ==================================================================
+       A — JOURNAL DU SOIR
+       ================================================================== -->
+  <section class="dir">
+    <div class="dir-head"><span class="dir-letter">A</span><span class="dir-name">Journal du soir</span></div>
+    <p class="dir-meta">Ivoire, encre, une colonne.</p>
+
+    <div class="screens">
+
+      <!-- A1 · ouverture -->
+      <div class="unit">
+        <div class="slot"><div class="dev ph-a"><div class="a-page">
+          <div class="a-status"><span>19:47</span><span>Service</span></div>
+          <div class="a-mast">
+            <div class="a-rulefat"></div>
+            <div class="a-mast-name">Le Journal du Comptoir</div>
+            <div class="a-mast-sub">Jeudi soir · Lyon 7<sup>e</sup> · 04 78 •• •• 12</div>
+            <div class="a-rulefat"></div>
+          </div>
+          <nav class="a-som">
+            <a class="on">Le service</a><a>L’appel</a><a>La carte</a><a>Le compte</a>
+          </nav>
+
+          <h1 class="a-h1">Rush depuis 19 h 10</h1>
+          <p class="a-chapo">Sofiane annonce trente minutes au téléphone et demande si le délai convient avant d’enregistrer quoi que ce soit.</p>
+          <p class="a-p">Depuis l’ouverture du service, <b>31 appels pris</b>, 24 commandes enregistrées, 6 laissées sans validation. 412,80 € confirmés, 17,20 € de panier moyen. Sofiane a parlé 147 minutes sur les 300 du forfait Pro et transféré deux appels au comptoir.</p>
+
+          <div class="a-rule"></div>
+          <div class="a-inter">Le délai annoncé</div>
+          <div class="a-fig"><span class="a-fig-n">30</span><span class="a-fig-u">minutes</span></div>
+          <p class="a-p small">Normal 15 min · <b>Rush 30 min</b> · Très chargé 45 min · Commandes stoppées. Au niveau Rush, l’IA demande si le délai convient avant d’enregistrer ; retrait et livraison restent ouverts.</p>
+
+          <div class="a-rule"></div>
+          <div class="a-inter">Au fil du soir</div>
+          <div class="a-jline"><span class="a-jt">19 h 41</span><span class="a-jx">Commande #248 <i>· 1 min 32</i></span><span class="a-jv">10,50 €</span></div>
+          <div class="a-jline"><span class="a-jt">19 h 36</span><span class="a-jx">Question — horaires du dimanche <i>· 44 s</i></span><span class="a-jv">—</span></div>
+          <div class="a-jline"><span class="a-jt">19 h 31</span><span class="a-jx">Commande #245 <i>· 2 min 11</i></span><span class="a-jv">31,50 €</span></div>
+          <div class="a-jline"><span class="a-jt">19 h 19</span><span class="a-jx">Commande #244 expirée <i>· 26 s</i></span><span class="a-jv">—</span></div>
+
+          <div class="a-rule"></div>
+          <p class="a-p small">Retrait au comptoir ; livraison dans un rayon de 4,5 km, 2,50 € de frais. Prise de commande jusqu’à 23 h 00.</p>
+          <div class="a-actions"><a>Arrêter 30 minutes</a><a>Journal complet</a></div>
+        </div></div></div>
+        <div class="cap">1 · L’ouverture</div>
+      </div>
+
+      <!-- A2 · rejeu d'appel -->
+      <div class="unit">
+        <div class="slot"><div class="dev ph-a"><div class="a-page">
+          <div class="a-status"><span>19:47</span><span>L’appel</span></div>
+          <div class="a-eyebrow">Rejeu · 06 •• •• •• 47 · 1 min 32</div>
+          <h1 class="a-h1 sm">L’appel de 19 h 41</h1>
+          <p class="a-chapo">Un tacos, un cheddar ajouté en route, un récapitulatif envoyé par SMS, puis une validation de vive voix.</p>
+          <div class="a-rule"></div>
+          <div class="a-inter">La transcription</div>
+
+          <p class="a-line"><span class="a-t">00:02</span><span class="a-who">Sofiane</span>Bonsoir ! Vous êtes en ligne avec l’assistant vocal automatisé du Comptoir. Je prends votre commande ?</p>
+          <p class="a-line"><span class="a-t">00:11</span><span class="a-who">Client</span>Ouais bonsoir, je voudrais un tacos M poulet sauce algérienne.</p>
+          <p class="a-cart">Au panier — 1 Tacos M, poulet, sauce algérienne, 9,50 €.</p>
+          <p class="a-line"><span class="a-t">00:19</span><span class="a-who">Sofiane</span>C’est noté. Le tacos M vient avec frites et une boisson — je vous mets quoi comme boisson ?</p>
+          <p class="a-line"><span class="a-t">00:28</span><span class="a-who">Client</span>Un Oasis. Et rajoutez du cheddar.</p>
+          <p class="a-cart">Panier corrigé — frites et Oasis inclus, cheddar +1,00 €, 10,50 €.</p>
+          <p class="a-line"><span class="a-t">00:37</span><span class="a-who">Sofiane</span>Cheddar ajouté. Je vous propose un tiramisu maison à 3 € pour finir ?</p>
+          <p class="a-line"><span class="a-t">00:44</span><span class="a-who">Client</span>Non c’est bon. Je passe le prendre.</p>
+
+          <div class="a-rule"></div>
+          <div class="a-inter">Récapitulatif envoyé par SMS · 00:47</div>
+          <p class="a-sms">SNACK LE COMPTOIR — commande #248
+1x Tacos M poulet, sauce algérienne
+   + cheddar · boisson Oasis
+Retrait à 19h48 — 10,50 € sur place
+Répondez OK pour valider, MODIF pour changer.</p>
+          <div class="a-rule"></div>
+
+          <p class="a-line"><span class="a-t">00:58</span><span class="a-who">Sofiane</span>Je vous ai envoyé le récapitulatif par SMS. Vous me confirmez ?</p>
+          <p class="a-line"><span class="a-t">01:06</span><span class="a-who">Client</span>Oui je valide.</p>
+          <p class="a-end">Commande #248 en cuisine à 19 h 42, prête à 19 h 48, 10,50 € sur place.</p>
+          <div class="a-actions"><a>Renvoyer le SMS</a><a>Écouter</a></div>
+        </div></div></div>
+        <div class="cap">2 · Le rejeu d’un appel</div>
+      </div>
+
+      <!-- A3 · la carte -->
+      <div class="unit">
+        <div class="slot"><div class="dev ph-a"><div class="a-page">
+          <div class="a-status"><span>19:47</span><span>La carte</span></div>
+          <div class="a-eyebrow">Carte · Tacos · fiche produit</div>
+          <h1 class="a-h1">Tacos M, 9,50 €</h1>
+          <p class="a-chapo">Frites et une boisson incluses. Disponible ce soir ; le supplément Boursin est en rupture.</p>
+          <div class="a-rule"></div>
+
+          <div class="a-inter">Choix obligatoires</div>
+          <p class="a-p small">Taille, un choix : M. Viande, un choix : poulet, kebab, merguez, cordon bleu, steak haché. Sauce, un ou deux choix : algérienne, blanche, samouraï, biggy, harissa. L’IA pose les questions dans cet ordre.</p>
+          <div class="a-rule"></div>
+
+          <div class="a-inter">Suppléments</div>
+          <p class="a-p small">Cheddar 1,00 € · Double viande 2,00 € · Boisson 1,5 L 2,00 €. <b>Boursin 1,00 €, en rupture</b> : l’IA ne le propose plus et suggère une alternative.</p>
+          <div class="a-rule"></div>
+
+          <div class="a-inter">Précisions</div>
+          <p class="a-p small">Halal · contient gluten, lait. Formulé au téléphone comme « selon les informations du restaurant » : l’IA ne garantit jamais l’absence d’allergène et transfère en cas d’allergie.</p>
+          <div class="a-rule"></div>
+
+          <div class="a-inter">Demandes admises</div>
+          <p class="a-p small">Sans oignons · sauce à part · frites sans sel · bien cuit.</p>
+          <div class="a-rule"></div>
+
+          <div class="a-inter">Le reste de la carte</div>
+          <div class="a-jline"><span class="a-jx">Tacos</span><span class="a-jv">2 produits</span></div>
+          <div class="a-jline"><span class="a-jx">Sandwichs &amp; burgers</span><span class="a-jv">2 produits</span></div>
+          <div class="a-jline"><span class="a-jx">Pizzas <i>· merguez en rupture</i></span><span class="a-jv">2 produits</span></div>
+          <div class="a-jline"><span class="a-jx">À côté</span><span class="a-jv">3 produits</span></div>
+          <div class="a-rule"></div>
+          <div class="a-actions"><a>Passer en rupture</a><a>Importer une carte</a></div>
+        </div></div></div>
+        <div class="cap">3 · Un réglage : la carte</div>
+      </div>
+
+    </div>
+
+    <div class="notes">
+      <div><b>Principe</b><span>La soirée se lit comme un article : chapô, paragraphes, chiffres dans les phrases.</span></div>
+      <div><b>Navigation</b><span>Un sommaire de quatre entrées en haut de page. Aucun onglet, aucune couleur.</span></div>
+      <div><b>Hiérarchie</b><span>Un seul grand chiffre par écran ; le reste au fil du texte, coupé par des filets.</span></div>
+      <div><b>Coût</b><span>Lecture plus lente, aucun coup d’œil. Chaque écran demande une écriture éditoriale, à tenir à chaque évolution.</span></div>
+    </div>
+  </section>
+
+  <!-- ==================================================================
+       B — CONSOLE SILENCIEUSE
+       ================================================================== -->
+  <section class="dir">
+    <div class="dir-head"><span class="dir-letter">B</span><span class="dir-name">Console silencieuse</span></div>
+    <p class="dir-meta">Anthracite mat, un accent cuivre, un geste par écran.</p>
+
+    <div class="screens">
+
+      <!-- B1 · ouverture -->
+      <div class="unit">
+        <div class="slot"><div class="dev ph-b"><div class="b-page">
+          <div class="b-status"><span>19:47</span><span>Sofiane en ligne</span></div>
+          <div class="b-top">Snack Le Comptoir</div>
+          <div class="b-center">
+            <div class="b-mode">Rush</div>
+            <div class="b-delay">30 minutes annoncées</div>
+            <div class="b-say">« Il y a du monde ce soir, ce sera prêt dans 30 minutes. Est-ce que cela vous convient ? »</div>
+          </div>
+          <div class="b-foot">
+            <div class="b-dial"><span>Normal 15</span><span class="on">Rush 30</span><span>Chargé 45</span><span>Stop</span></div>
+            <div class="b-micro">31 appels pris · 24 commandes · 6 non validées<br>412,80 € récupérés · 17,20 € de panier · 147 min</div>
+            <div class="b-micro dim">19:41 commande 10,50 € · 19:36 question · 19:31 commande 31,50 € · 19:24 transfert</div>
+            <div class="b-act">Arrêter les commandes 30 min</div>
+          </div>
+        </div></div></div>
+        <div class="cap">1 · L’ouverture</div>
+      </div>
+
+      <!-- B2 · rejeu d'appel -->
+      <div class="unit">
+        <div class="slot"><div class="dev ph-b"><div class="b-page">
+          <div class="b-status"><span>19:47</span><span>Feuille</span></div>
+          <div class="b-top">Rejeu · 19:41 · 1 min 32</div>
+          <div class="b-total">10,50 €</div>
+          <div class="b-basket">1 Tacos M · poulet · sauce algérienne<br>frites + Oasis · cheddar</div>
+          <div class="b-tr">
+            <p class="b-bot">Bonsoir ! Vous êtes en ligne avec l’assistant vocal automatisé du Comptoir. Je prends votre commande ?</p>
+            <p class="b-me">Un tacos M poulet sauce algérienne.</p>
+            <p class="b-sys">Au panier · Tacos M · 9,50 €</p>
+            <p class="b-bot">Le tacos M vient avec frites et une boisson — je vous mets quoi comme boisson ?</p>
+            <p class="b-me">Un Oasis. Et rajoutez du cheddar.</p>
+            <p class="b-sys">Cheddar +1,00 € · panier 10,50 €</p>
+            <p class="b-bot">Je vous propose un tiramisu maison à 3 € pour finir ?</p>
+            <p class="b-me">Non c’est bon. Je passe le prendre.</p>
+            <p class="b-bot">Je vous ai envoyé le récapitulatif par SMS. Vous me confirmez ?</p>
+            <p class="b-me">Oui je valide.</p>
+            <p class="b-sys">Commande #248 confirmée · cuisine</p>
+          </div>
+          <div class="b-block">
+            <p class="b-smslab">SMS envoyé au 06 •• •• •• 47</p>
+            <p class="b-sms">SNACK LE COMPTOIR — commande #248
+1x Tacos M poulet, sauce algérienne + cheddar · boisson Oasis
+Retrait à 19h48 — 10,50 € sur place
+Répondez OK pour valider, MODIF pour changer.</p>
+          </div>
+          <div class="b-foot"><div class="b-act">Renvoyer le récapitulatif</div></div>
+        </div></div></div>
+        <div class="cap">2 · Le rejeu d’un appel</div>
+      </div>
+
+      <!-- B3 · la voix -->
+      <div class="unit">
+        <div class="slot"><div class="dev ph-b"><div class="b-page">
+          <div class="b-status"><span>19:47</span><span>Feuille</span></div>
+          <div class="b-top">Voix de l’assistant</div>
+          <div class="b-center">
+            <div class="b-name">Sofiane</div>
+            <div class="b-delay">Dynamique · vitesse normale</div>
+            <div class="b-say">« Bonsoir, assistant vocal automatisé du Comptoir, je prends votre commande ? »</div>
+          </div>
+          <div class="b-foot">
+            <div class="b-dial"><span>Chaleureux</span><span class="on">Dynamique</span><span>Pro</span><span>Quartier</span></div>
+            <div class="b-dial"><span>Lente</span><span class="on">Normale</span><span>Rapide</span><span class="on">FR</span><span class="on">AR</span></div>
+            <div class="b-micro">Voix signature — désactivée. Une minute de lecture guidée ; l’activation exige que vous confirmiez posséder cette voix et en autoriser l’usage.</div>
+            <div class="b-micro dim">Même avec une voix signature, l’assistant annonce qu’il est automatisé. Un changement ne s’applique jamais au milieu d’un appel.</div>
+            <div class="b-act">Appel test obligatoire</div>
+          </div>
+        </div></div></div>
+        <div class="cap">3 · Un réglage : la voix</div>
+      </div>
+
+    </div>
+
+    <div class="notes">
+      <div><b>Principe</b><span>Un thermostat. Le mode de service occupe l’écran ; tout le reste est relégué en bas, en petit.</span></div>
+      <div><b>Navigation</b><span>Pas d’onglets. Chaque réglage s’ouvre en feuille plein écran, une tâche à la fois.</span></div>
+      <div><b>Hiérarchie</b><span>Taille et opacité seules : aucune bordure, aucun fond de bloc, aucun séparateur.</span></div>
+      <div><b>Coût</b><span>Peu de choses visibles d’un coup ; un détail se paie en deux gestes. La densité est sacrifiée au calme.</span></div>
+    </div>
+  </section>
+
+  <!-- ==================================================================
+       C — FICHE D'ÉTABLISSEMENT
+       ================================================================== -->
+  <section class="dir">
+    <div class="dir-head"><span class="dir-letter">C</span><span class="dir-name">Fiche d’établissement</span></div>
+    <p class="dir-meta">Blanc, gris froids, une encre bleue. Lignes clé / valeur.</p>
+
+    <div class="screens">
+
+      <!-- C1 · ouverture -->
+      <div class="unit">
+        <div class="slot"><div class="dev ph-c"><div class="c-page">
+          <div class="c-status"><span>19:47</span><span>Gérant</span></div>
+          <div class="c-head">
+            <h2 class="c-title">Snack Le Comptoir</h2>
+            <p class="c-subtitle">12 rue Garibaldi, Lyon 7<sup>e</sup> · 04 78 •• •• 12</p>
+            <span class="c-tag">Assistant actif — Sofiane</span>
+          </div>
+
+          <div class="c-sec">Service</div>
+          <div class="c-row"><span class="c-k">Niveau de charge</span><span class="c-v">Rush</span></div>
+          <div class="c-row"><span class="c-k">Délai annoncé<em>Normal 15 · Rush 30 · Chargé 45</em></span><span class="c-v">30 min</span></div>
+          <div class="c-row"><span class="c-k">Retrait / livraison<em>suspendus au niveau « très chargé »</em></span><span class="c-v">Ouverts</span></div>
+          <div class="c-full">« Il y a du monde ce soir, ce sera prêt dans 30 minutes. Est-ce que cela vous convient ? »</div>
+          <div class="c-act"><button class="c-btn">Changer de niveau</button><a class="c-lnk">Arrêter 30 min</a></div>
+
+          <div class="c-sec">Chiffres du jour</div>
+          <div class="c-row"><span class="c-k">Appels pris</span><span class="c-v">31</span></div>
+          <div class="c-row"><span class="c-k">Commandes</span><span class="c-v">24</span></div>
+          <div class="c-row"><span class="c-k">Expirées<em>sans validation du client</em></span><span class="c-v">6</span></div>
+          <div class="c-row"><span class="c-k">CA récupéré</span><span class="c-v">412,80 €</span></div>
+          <div class="c-row"><span class="c-k">Panier moyen</span><span class="c-v">17,20 €</span></div>
+          <div class="c-row"><span class="c-k">Minutes consommées</span><span class="c-v">147 min</span></div>
+
+          <div class="c-sec">Derniers appels</div>
+          <div class="c-row"><span class="c-k">19:41 · commande #248<em>1 min 32</em></span><span class="c-v">10,50 €</span></div>
+          <div class="c-row"><span class="c-k">19:36 · question<em>horaires du dimanche</em></span><span class="c-v mute">—</span></div>
+          <div class="c-row"><span class="c-k">19:31 · commande #245<em>2 min 11</em></span><span class="c-v">31,50 €</span></div>
+          <div class="c-act"><a class="c-lnk">Journal des appels (31)</a></div>
+
+          <div class="c-sec">Horaires &amp; livraison</div>
+          <div class="c-row"><span class="c-k">Ouverture<em>Lun – Jeu · prise de commande</em></span><span class="c-v mute">11h30 · 18h00–23h00</span></div>
+          <div class="c-row"><span class="c-k">Exceptions<em>24 déc. fermé · 31 déc. 01h00</em></span><span class="c-v">2</span></div>
+          <div class="c-row"><span class="c-k">Zone de livraison<em>minimum 15,00 € · frais 2,50 €</em></span><span class="c-v">4,5 km</span></div>
+        </div></div></div>
+        <div class="cap">1 · L’ouverture</div>
+      </div>
+
+      <!-- C2 · rejeu d'appel -->
+      <div class="unit">
+        <div class="slot"><div class="dev ph-c"><div class="c-page">
+          <div class="c-status"><span>19:47</span><span>Appels</span></div>
+          <div class="c-head">
+            <h2 class="c-title">Appel du 19:41</h2>
+            <p class="c-subtitle">06 •• •• •• 47 · 1 min 32 · commande #248</p>
+            <span class="c-tag">Confirmée à 19:42</span>
+          </div>
+
+          <div class="c-sec">Transcription</div>
+          <div class="c-tr"><span class="c-tt">00:02</span><span class="c-tx ai"><em>Sofiane</em>Bonsoir ! Vous êtes en ligne avec l’assistant vocal automatisé du Comptoir. Je prends votre commande ?</span></div>
+          <div class="c-tr"><span class="c-tt">00:11</span><span class="c-tx"><em>Client</em>Ouais bonsoir, je voudrais un tacos M poulet sauce algérienne.</span></div>
+          <div class="c-tr"><span class="c-tt">00:19</span><span class="c-tx ai"><em>Sofiane</em>Le tacos M vient avec frites et une boisson — je vous mets quoi comme boisson ?</span></div>
+          <div class="c-tr"><span class="c-tt">00:28</span><span class="c-tx"><em>Client</em>Un Oasis. Et rajoutez du cheddar.</span></div>
+          <div class="c-tr"><span class="c-tt">00:44</span><span class="c-tx"><em>Client</em>Non c’est bon. Je passe le prendre.</span></div>
+          <div class="c-tr"><span class="c-tt">01:06</span><span class="c-tx"><em>Client</em>Oui je valide.</span></div>
+
+          <div class="c-sec">Panier construit</div>
+          <div class="c-row"><span class="c-k">1 × Tacos M<em>poulet · sauce algérienne</em></span><span class="c-v">9,50 €</span></div>
+          <div class="c-row"><span class="c-k">Frites + boisson Oasis<em>inclus · retrait à 19:48</em></span><span class="c-v mute">0,00 €</span></div>
+          <div class="c-row"><span class="c-k">Supplément cheddar<em>ajouté à 00:30</em></span><span class="c-v">1,00 €</span></div>
+          <div class="c-tot"><span>Total</span><span>10,50 €</span></div>
+
+          <div class="c-sec">Récapitulatif SMS</div>
+          <div class="c-pre">SNACK LE COMPTOIR — commande #248
+1x Tacos M poulet, sauce algérienne
+   + cheddar · boisson Oasis
+Retrait à 19h48 — 10,50 € sur place
+Répondez OK pour valider, MODIF pour changer.</div>
+          <div class="c-row"><span class="c-k">Envoyé à</span><span class="c-v">06 •• •• •• 47</span></div>
+          <div class="c-row"><span class="c-k">Confirmation</span><span class="c-v blue">Orale — 01:06</span></div>
+          <div class="c-act"><button class="c-btn ghost">Renvoyer le SMS</button><a class="c-lnk">Voir la commande</a></div>
+        </div></div></div>
+        <div class="cap">2 · Le rejeu d’un appel</div>
+      </div>
+
+      <!-- C3 · abonnement -->
+      <div class="unit">
+        <div class="slot"><div class="dev ph-c"><div class="c-page">
+          <div class="c-status"><span>19:47</span><span>Compte</span></div>
+          <div class="c-head">
+            <h2 class="c-title">Abonnement</h2>
+            <p class="c-subtitle">Forfait Pro · prélèvement SEPA</p>
+            <span class="c-tag">Engagement 6 mois</span>
+          </div>
+
+          <div class="c-sec">Forfait en cours</div>
+          <div class="c-row"><span class="c-k">Formule</span><span class="c-v">Pro</span></div>
+          <div class="c-row"><span class="c-k">Prix mensuel</span><span class="c-v">66,00 €</span></div>
+          <div class="c-row"><span class="c-k">Minutes incluses</span><span class="c-v">300 min</span></div>
+          <div class="c-row"><span class="c-k">Dépassement</span><span class="c-v">0,35 €/min</span></div>
+
+          <div class="c-sec">Consommation du mois</div>
+          <div class="c-row"><span class="c-k">Minutes consommées</span><span class="c-v">147 / 300</span></div>
+          <div class="c-bar"><span></span></div>
+          <div class="c-row"><span class="c-k">Part du forfait</span><span class="c-v">49 %</span></div>
+          <div class="c-row"><span class="c-k">Alerte automatique<em>envoyée à 80 % des minutes</em></span><span class="c-v mute">240 min</span></div>
+          <div class="c-note">Le service n’est jamais coupé : au-delà des minutes incluses, le dépassement est facturé 0,35 €/min, au compteur à la seconde.</div>
+
+          <div class="c-sec">Tous les forfaits</div>
+          <div class="c-3"><b>PAYG</b><i>0 min</i><u>0 €</u></div>
+          <div class="c-3"><b>Basic</b><i>100 min</i><u>32 €</u></div>
+          <div class="c-3 on"><b>Pro — actuel</b><i>300 min</i><u>66 €</u></div>
+          <div class="c-3"><b>Business</b><i>500 min</i><u>100 €</u></div>
+          <div class="c-3"><b>Big Business</b><i>1 500 min</i><u>250 €</u></div>
+          <div class="c-act"><button class="c-btn">Changer de forfait</button><a class="c-lnk">Factures</a></div>
+
+          <div class="c-note">Resto IA facture uniquement son abonnement : aucun paiement de commande n’est collecté, aucune carte n’est stockée.</div>
+        </div></div></div>
+        <div class="cap">3 · Un réglage : l’abonnement</div>
+      </div>
+
+    </div>
+
+    <div class="notes">
+      <div><b>Principe</b><span>La fiche de l’établissement : tout est une ligne libellé / valeur, alignée et vérifiable.</span></div>
+      <div><b>Navigation</b><span>Une page qui se déroule, sections à en-tête ; les actions ferment la section.</span></div>
+      <div><b>Hiérarchie</b><span>L’alignement fait la hiérarchie : chiffres tabulaires à droite, filets pleine largeur.</span></div>
+      <div><b>Coût</b><span>Austère, sans émotion ni image. Exige des libellés courts et une grille tenue sur tous les écrans.</span></div>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>

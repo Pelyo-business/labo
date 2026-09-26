@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Resto IA — version précédente (archive)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A1020">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Resto IA">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Montserrat:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Petit+Formal+Script&display=swap">
+<link rel="stylesheet" href="src/theme.css?v=1.0.0-6e4ad0a">
+<link rel="stylesheet" href="src/skin.css?v=1.0.0-6e4ad0a">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230a1020'/><path d='M11 9 9 11c-.6.6-.7 1.5-.4 2.2a16 16 0 0 0 9.4 9.4c.7.3 1.6.2 2.2-.4l2-2-3.3-2.2-1.6 1.2a12 12 0 0 1-5.2-5.2l1.3-1.6z' fill='none' stroke='%237ea2ff' stroke-width='1.6'/></svg>">
+<meta name="robots" content="noindex, nofollow"><style>.envb{position:fixed;top:0;left:0;right:0;z-index:99999;height:20px;display:flex;align-items:center;justify-content:center;gap:8px;background:#4F8BD4;color:#0B0B0C;font:600 10px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.14em;pointer-events:none}body{padding-top:20px!important} print{.envb{display:none}}</style></head>
+<body><div class="envb">LABO · v1.0.0+6e4ad0a</div>
+
+<div class="caption"><span class="dot"></span> archive — version précédente, conservée pour comparaison — écran d'accueil, ouverture d'appli, connexion, puis le reste</div>
+
+<div class="device">
+  <div class="notch"></div>
+  <div class="viewport" id="viewport">
+    <div class="home" id="home">
+      <div class="statusbar"><span class="time" data-clock></span>
+        <span class="icons">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M2 8.5c5-4 15-4 20 0M5 12c3.5-2.7 10.5-2.7 14 0M8.3 15.5c2-1.4 5.4-1.4 7.4 0"/><circle cx="12" cy="18.5" r="1" fill="#fff" stroke="none"/></svg>
+          <svg viewBox="0 0 24 24" fill="#fff" stroke="none"><rect x="2" y="7" width="18" height="10" rx="2.5" stroke="#fff" stroke-width="1.6" fill="none"/><rect x="4" y="9" width="12" height="6" rx="1"/><rect x="21" y="10" width="1.6" height="4" rx="0.8"/></svg>
+        </span>
+      </div>
+      <div class="iconsgrid" id="iconsgrid"></div>
+      <div class="dock" id="dock"></div>
+    </div>
+    <div class="screen" id="appwrap">
+      <div class="statusbar"><span class="time" data-clock></span>
+        <span class="icons">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 8.5c5-4 15-4 20 0M5 12c3.5-2.7 10.5-2.7 14 0M8.3 15.5c2-1.4 5.4-1.4 7.4 0"/><circle cx="12" cy="18.5" r="1" fill="currentColor" stroke="none"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="2" y="7" width="18" height="10" rx="2.5" stroke="currentColor" stroke-width="1.6" fill="none"/><rect x="4" y="9" width="12" height="6" rx="1"/><rect x="21" y="10" width="1.6" height="4" rx="0.8"/></svg>
+        </span>
+      </div>
+      <div class="content" id="content"></div>
+      <button class="histBtn" id="histBtn" hidden aria-label="Historique"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M9 4v16"/></svg></button>
+      <div class="actionbar" id="actionbar" hidden></div>
+      <div class="navbar" id="navbar" hidden></div>
+      <button class="homeind" id="homeind" aria-label="Retour à l'accueil du téléphone"></button>
+    </div>
+    <div class="toast" id="toast"></div>
+  </div>
+</div>
+
+<footer>Tape une des trois icônes Resto IA pour ouvrir l'appli, connecte-toi ou lance la démo, puis navigue.<br>Le trait en bas de l'appli ramène à l'accueil du téléphone — les autres icônes sont décoratives.</footer>
+
+<script src="src/data.js?v=1.0.0-6e4ad0a"></script>
+<script src="src/app.js?v=1.0.0-6e4ad0a"></script>
+<script src="src/app-gerant.js?v=1.0.0-6e4ad0a"></script>
+<script src="src/app-cuisine.js?v=1.0.0-6e4ad0a"></script>
+<script src="src/app-commercial.js?v=1.0.0-6e4ad0a"></script>
+<script>RIA.boot();</script>
+</body>
+</html>

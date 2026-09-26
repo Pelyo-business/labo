@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resto IA — Application commercial · trois directions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@500;600;700&family=Barlow:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+   PLANCHE — chrome sobre. Ne doit rien voler aux maquettes.
+   ===================================================================== */
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:#EDEDEF;color:#17181B;
+  font:400 14px/1.5 Inter,system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1120px;margin:0 auto;padding:0 28px}
+
+.board{padding:56px 0 30px;border-bottom:1px solid #D8D8DC}
+.kicker{margin:0 0 10px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#85878E;font-weight:600}
+.board h1{margin:0;font:600 30px/1.1 Inter,sans-serif;letter-spacing:-.02em}
+.board .sub{margin:12px 0 0;max-width:620px;color:#5D6068;font-size:13.5px}
+
+.dir{padding:52px 0 8px;border-bottom:1px solid #D8D8DC}
+.dir:last-of-type{border-bottom:0;padding-bottom:64px}
+.dirhead{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:26px}
+.letter{font:700 30px/1 Inter,sans-serif;letter-spacing:-.03em;color:#17181B}
+.dirhead h2{margin:0;font:600 22px/1.15 Inter,sans-serif;letter-spacing:-.015em}
+.tag{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#8A8C93;font-weight:600}
+
+.stage{display:flex;flex-wrap:wrap;gap:30px;align-items:flex-start}
+.shot{--s:.80}
+.fr{width:calc(390px * var(--s));height:calc(844px * var(--s));position:relative;overflow:hidden}
+.screen{width:390px;height:844px;position:relative;overflow:hidden;
+  transform:scale(var(--s));transform-origin:0 0}
+.cap{margin-top:11px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#8A8C93;font-weight:600}
+
+/* châssis, skinnés différemment par direction */
+.dA .fr{border-radius:34px;box-shadow:0 0 0 9px #0A0C0F,0 14px 34px rgba(0,0,0,.30)}
+.dA .screen{border-radius:26px}
+.dB .fr{border-radius:24px;box-shadow:0 0 0 4px #111111,0 12px 26px rgba(0,0,0,.22)}
+.dB .screen{border-radius:20px}
+.dC .fr{border-radius:16px;box-shadow:0 0 0 1px #C9CACE,0 6px 18px rgba(0,0,0,.10)}
+.dC .screen{border-radius:15px}
+
+.notes{display:grid;grid-template-columns:repeat(4,1fr);gap:0 26px;margin:34px 0 0;padding:20px 0 0;border-top:1px solid #D8D8DC}
+.notes>div{min-width:0}
+.notes dt{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#93959B;font-weight:600;margin-bottom:6px}
+.notes dd{margin:0;font-size:12.5px;line-height:1.45;color:#33353B}
+
+@media(max-width:1140px){.shot{--s:.68}}
+@media(max-width:980px){.shot{--s:.56}.notes{grid-template-columns:repeat(2,1fr);gap:18px 26px}}
+@media(max-width:840px){.shot{--s:.70}.stage{gap:24px}}
+@media(max-width:700px){.shot{--s:.58}}
+@media(max-width:560px){.wrap{padding:0 18px}.shot{--s:.80}.notes{grid-template-columns:1fr}}
+@media(max-width:430px){.shot{--s:.74}}
+
+/* =====================================================================
+   DIRECTION A — « CARTE D’ABORD »
+   Asphalte, blanc, vert signalétique, rouge d’opposition.
+   ===================================================================== */
+.aScr{background:#11141A;font-family:Inter,sans-serif;color:#fff}
+.aMap{position:absolute;inset:0}
+.aMap svg{display:block}
+
+.aStat{position:absolute;top:0;left:0;right:0;height:52px;display:flex;align-items:center;
+  justify-content:space-between;padding:14px 24px 0;z-index:6;
+  background:linear-gradient(#0B0D11cc,#0B0D1100)}
+.aStat b{font:600 14px Inter,sans-serif;letter-spacing:.01em}
+.aStat .sg{display:flex;gap:5px;align-items:center}
+.aZone{position:absolute;top:60px;left:16px;z-index:6;display:flex;align-items:center;gap:8px;
+  background:#0B0D11e6;border:1px solid #2A313A;padding:8px 13px 8px 10px;border-radius:999px}
+.aZone i{width:7px;height:7px;border-radius:50%;background:#00C26E;display:block}
+.aZone span{font:600 12px Inter,sans-serif;letter-spacing:.01em}
+.aBack{position:absolute;top:58px;left:16px;z-index:7;width:38px;height:38px;border-radius:50%;
+  background:#0B0D11e6;border:1px solid #2A313A;display:flex;align-items:center;justify-content:center}
+
+.aFab{position:absolute;right:18px;width:62px;height:62px;border-radius:50%;background:#00C26E;
+  z-index:8;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 10px 26px rgba(0,194,110,.38),0 2px 6px rgba(0,0,0,.5)}
+
+.aSheet{position:absolute;left:0;right:0;bottom:0;background:#15181D;
+  border-radius:20px 20px 0 0;box-shadow:0 -20px 46px rgba(0,0,0,.6);overflow:hidden;z-index:7}
+.aGrab{width:40px;height:4px;border-radius:3px;background:#3B434E;margin:9px auto 0}
+.aHd{padding:14px 20px 12px}
+.aHd h3{margin:0;font:700 19px Archivo,Inter,sans-serif;letter-spacing:-.01em}
+.aHd p{margin:3px 0 0;font-size:11.5px;color:#7F8894;letter-spacing:.02em}
+
+.aRow{display:flex;align-items:center;gap:13px;padding:11px 20px;border-top:1px solid #1E232A}
+.aDot{width:11px;height:11px;border-radius:50%;flex:none}
+.aRow .n{flex:1;min-width:0}
+.aRow .n b{display:block;font:600 15px Inter,sans-serif;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.aRow .n em{font-style:normal;font-size:9px;letter-spacing:.11em;text-transform:uppercase;font-weight:700;margin-left:7px}
+.aRow .n span{display:block;font-size:11px;color:#79828E;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.aRow .d{text-align:right;flex:none}
+.aRow .d b{display:block;font:600 14px Inter,sans-serif}
+.aRow .d span{display:block;font-size:10px;color:#79828E;margin-top:1px}
+
+.s-jamais{color:#FFFFFF}   .bg-jamais{background:#FFFFFF}
+.s-reserve{color:#3FA9FF}  .bg-reserve{background:#3FA9FF}
+.s-sansrep{color:#7C8794}  .bg-sansrep{background:#7C8794}
+.s-refus{color:#FF8A3D}    .bg-refus{background:#FF8A3D}
+.s-attente{color:#FFC53D}  .bg-attente{background:#FFC53D}
+.s-essai{color:#8BE04E}    .bg-essai{background:#8BE04E}
+.s-client{color:#00C26E}   .bg-client{background:#00C26E}
+.s-stop{color:#FF3B30}     .bg-stop{background:#FF3B30}
+
+.aTitle{padding:16px 20px 0}
+.aTitle .st{font:700 10px Inter,sans-serif;letter-spacing:.16em;text-transform:uppercase}
+.aTitle h2{margin:7px 0 0;font:700 31px/1.02 Archivo,Inter,sans-serif;letter-spacing:-.025em}
+.aTitle p{margin:7px 0 0;font-size:12.5px;color:#8B939E}
+.aTitle .km{margin:9px 0 0;font:600 13px Inter,sans-serif;color:#fff}
+.aTitle .km i{font-style:normal;color:#5E6773;margin:0 7px}
+
+.aResa{margin-top:13px;padding:13px 20px 14px;background:#101318;
+  border-top:1px solid #222831;border-bottom:1px solid #222831}
+.aResa .lb{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#6F7987;font-weight:700}
+.aResa .cd{margin-top:6px;display:flex;align-items:baseline;gap:9px}
+.aResa .cd b{font:700 30px Archivo,Inter,sans-serif;letter-spacing:-.02em;color:#3FA9FF}
+.aResa .cd span{font-size:11px;color:#7C8593}
+.aBar{height:3px;background:#222A33;margin-top:11px}
+.aBar i{display:block;height:3px;background:#3FA9FF;width:68%}
+.aResa .ft{margin-top:9px;font-size:11px;line-height:1.4;color:#79828E}
+
+.aLog{padding:11px 20px 2px}
+.aLog .lb{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#6F7987;font-weight:700;margin-bottom:8px}
+.aLog div{display:flex;gap:10px;font-size:12px;color:#B7BEC7;padding:4px 0}
+.aLog div em{font-style:normal;color:#6B7480}
+.aLog .q{color:#FFC53D;font-style:italic}
+
+.aAct{padding:12px 20px 0}
+.aCta{height:54px;background:#00C26E;color:#08130D;border-radius:4px;display:flex;align-items:center;
+  justify-content:center;gap:9px;font:700 16px Inter,sans-serif;letter-spacing:-.01em}
+.aProof{display:flex;gap:0;margin-top:10px;border:1px solid #262D36}
+.aProof span{flex:1;text-align:center;padding:9px 2px;font-size:10px;letter-spacing:.04em;color:#8A929D;
+  border-right:1px solid #262D36}
+.aProof span:last-child{border-right:0}
+.aProof span.on{background:#1C222A;color:#fff;font-weight:600}
+.aNote{margin-top:7px;font-size:10px;color:#69727E;letter-spacing:.01em}
+
+.aLink{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;
+  border-top:1px solid #1E232A;font:600 14.5px Inter,sans-serif}
+.aLink small{display:block;font-weight:400;font-size:10.5px;color:#6F7987;margin-top:2px}
+.aLink.dng{color:#FF3B30}
+.aChev{color:#4C5663;font-size:16px}
+
+.aBig{padding:20px 20px 4px}
+.aBig .lb{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6F7987;font-weight:700}
+.aBig .v{font:700 52px/1 Archivo,Inter,sans-serif;letter-spacing:-.035em;margin-top:8px;color:#00C26E}
+.aBig .u{margin-top:8px;font-size:12.5px;color:#9AA2AD}
+.aMonth{display:flex;align-items:center;gap:11px;padding:9px 20px}
+.aMonth .m{width:64px;font-size:11.5px;color:#8B939E}
+.aMonth .t{flex:1;height:8px;background:#1C222A}
+.aMonth .t i{display:block;height:8px;background:#00C26E}
+.aMonth .v{width:66px;text-align:right;font:600 12.5px Inter,sans-serif;font-variant-numeric:tabular-nums}
+.aSec{padding:18px 20px 6px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6F7987;font-weight:700}
+.aFun{padding:6px 20px}
+.aFun div{display:flex;align-items:center;gap:11px;padding:6px 0}
+.aFun .f{flex:1;font-size:12.5px;color:#C4CBD4}
+.aFun .t{width:132px;height:6px;background:#1C222A}
+.aFun .t i{display:block;height:6px;background:#4C5663}
+.aFun .t i.g{background:#00C26E}
+.aFun .t i.r{background:#FF3B30}
+.aFun .n{width:34px;text-align:right;font:600 12.5px Inter,sans-serif;font-variant-numeric:tabular-nums}
+
+/* =====================================================================
+   DIRECTION B — « PILE DU JOUR »
+   Aplats pleins, display large, trois gestes.
+   ===================================================================== */
+.bScr{font-family:Barlow,system-ui,sans-serif;overflow:hidden}
+.bTop{position:absolute;top:0;left:0;right:0;height:34px;display:flex;align-items:center;
+  justify-content:space-between;padding:11px 20px 0;z-index:9;font:600 12px Barlow,sans-serif}
+.bCount{position:absolute;top:40px;left:20px;right:20px;z-index:9;display:flex;align-items:center;
+  justify-content:space-between}
+.bCount b{font:600 12px Barlow,sans-serif;letter-spacing:.06em;text-transform:uppercase;opacity:.72}
+.bKeys{display:flex;gap:3px;align-items:center}
+.bKeys i{width:11px;height:11px;display:block}
+.bKeys i.on{outline:2px solid currentColor;outline-offset:2px}
+
+.bPeek2{position:absolute;left:30px;right:30px;top:62px;bottom:0;
+  box-shadow:0 -2px 0 rgba(0,0,0,.28)}
+.bPeek{position:absolute;left:15px;right:15px;top:78px;bottom:0;
+  box-shadow:0 -2px 0 rgba(0,0,0,.28)}
+.bPeekN{position:absolute;top:4px;left:0;right:0;text-align:center;
+  font:700 9px Barlow,sans-serif;letter-spacing:.14em;text-transform:uppercase;opacity:.62}
+.bCard{position:absolute;left:0;right:0;top:96px;bottom:0;padding:24px 26px 22px;
+  display:flex;flex-direction:column;box-shadow:0 -3px 0 rgba(0,0,0,.3)}
+
+.bSt{display:flex;justify-content:space-between;align-items:baseline;
+  font:700 11px Barlow,sans-serif;letter-spacing:.14em;text-transform:uppercase}
+.bName{font-family:Anton,Impact,sans-serif;font-weight:400;line-height:.9;letter-spacing:.004em;
+  text-transform:uppercase;margin:16px 0 0}
+.bMeta{margin:14px 0 0;font:500 14px Barlow,sans-serif;letter-spacing:.01em;opacity:.85}
+.bRule{height:4px;margin:20px 0 0;background:currentColor;opacity:.9}
+.bLab{margin:16px 0 0;font:700 10.5px Barlow,sans-serif;letter-spacing:.16em;text-transform:uppercase;opacity:.62}
+.bQuote{margin:7px 0 0;font:600 19px/1.22 Barlow,sans-serif;letter-spacing:-.01em}
+.bSub{margin:9px 0 0;font:400 12.5px/1.35 Barlow,sans-serif;opacity:.72}
+.bGrow{flex:1}
+
+.bGo{height:74px;display:flex;align-items:center;justify-content:center;
+  font-family:Anton,Impact,sans-serif;font-size:27px;letter-spacing:.02em;text-transform:uppercase}
+.bPair{display:flex;gap:12px;margin-top:12px}
+.bPair div{flex:1;height:58px;display:flex;align-items:center;justify-content:center;
+  font:700 14px Barlow,sans-serif;letter-spacing:.09em;text-transform:uppercase;border:3px solid currentColor}
+
+.bCd{font-family:Anton,Impact,sans-serif;font-size:50px;line-height:.92;letter-spacing:.01em;margin:10px 0 0}
+.bCdL{font:700 10.5px Barlow,sans-serif;letter-spacing:.16em;text-transform:uppercase;opacity:.7;margin-top:8px}
+.bWhite{height:70px;background:#fff;color:#1B4DFF;display:flex;align-items:center;justify-content:center;
+  font-family:Anton,Impact,sans-serif;font-size:25px;letter-spacing:.02em;text-transform:uppercase}
+.bSeg{display:flex;margin-top:10px;border:3px solid #fff}
+.bSeg span{flex:1;text-align:center;padding:9px 2px;font:700 10px Barlow,sans-serif;letter-spacing:.05em;
+  text-transform:uppercase;border-right:3px solid #fff;opacity:.8}
+.bSeg span:last-child{border-right:0}
+.bSeg span.on{background:#fff;color:#1B4DFF;opacity:1}
+.bTrio{display:flex;gap:10px;margin-top:12px}
+.bTrio div{flex:1;height:54px;display:flex;align-items:center;justify-content:center;text-align:center;
+  font:700 12px/1.15 Barlow,sans-serif;letter-spacing:.07em;text-transform:uppercase;border:3px solid #fff}
+.bFoot{margin-top:14px;font:500 11.5px/1.35 Barlow,sans-serif;opacity:.78;
+  border-top:2px solid currentColor;padding-top:10px}
+
+.bPitchHd{display:flex;align-items:flex-end;justify-content:space-between}
+.bPitchHd h2{margin:0;font-family:Anton,Impact,sans-serif;font-size:44px;line-height:.9;
+  letter-spacing:.01em;text-transform:uppercase;color:#FFD400}
+.bPitchHd span{font:700 12px Barlow,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#fff;opacity:.6}
+.bSegs{display:flex;gap:5px;margin-top:14px}
+.bSegs i{flex:1;height:6px;background:#FFD400;display:block}
+.bSegs i.off{background:#333}
+.bStep{display:flex;gap:13px;padding:11px 0;border-bottom:1px solid #262626}
+.bStep b{font-family:Anton,Impact,sans-serif;font-size:19px;color:#FFD400;width:44px;flex:none;line-height:1.1}
+.bStep p{margin:0;font:400 12px/1.32 Barlow,sans-serif;color:#E6E6E6}
+.bDemo{margin-top:16px;background:#FFD400;color:#101010;padding:13px 16px;display:flex;
+  align-items:center;justify-content:space-between}
+.bDemo b{font-family:Anton,Impact,sans-serif;font-size:20px;letter-spacing:.02em;text-transform:uppercase}
+.bDemo span{font:600 11px Barlow,sans-serif;letter-spacing:.04em;text-align:right;line-height:1.2}
+.bObjL{margin:18px 0 6px;font:700 11px Barlow,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#8A8A8A}
+.bObj{padding:8px 0;border-bottom:1px solid #262626;font:600 13.5px Barlow,sans-serif;color:#fff}
+.bObj.open{color:#FFD400}
+.bAns{padding:8px 0 10px;font:400 12px/1.34 Barlow,sans-serif;color:#C9C9C9;border-bottom:1px solid #262626}
+
+/* =====================================================================
+   DIRECTION C — « CARNET DE TOURNÉE »
+   Gris très clair, indigo, lignes serrées, chiffres tabulaires.
+   ===================================================================== */
+.cScr{background:#F7F7F8;color:#111318;font-family:"IBM Plex Sans",system-ui,sans-serif}
+.cStat{height:40px;display:flex;align-items:center;justify-content:space-between;padding:12px 18px 0;
+  font:600 12px "IBM Plex Sans",sans-serif;color:#111318}
+.cCmd{padding:10px 14px 0}
+.cField{display:flex;align-items:center;gap:9px;background:#fff;border:1px solid #E1E1E4;height:36px;padding:0 10px}
+.cField svg{flex:none}
+.cField span{flex:1;font-size:12.5px;color:#9A9BA2}
+.cField kbd{font:500 10px "IBM Plex Mono",monospace;color:#7B7C84;border:1px solid #E1E1E4;
+  padding:2px 5px;background:#F7F7F8}
+.cFilt{display:flex;gap:11px;padding:10px 15px 9px;overflow:hidden;white-space:nowrap}
+.cFilt span{font:600 9px "IBM Plex Sans",sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#8C8D95}
+.cFilt span b{font-family:"IBM Plex Mono",monospace;font-weight:500;color:#B2B3BA;margin-left:4px}
+.cFilt span.on{color:#4F46E5;border-bottom:2px solid #4F46E5;padding-bottom:3px}
+.cFilt span.on b{color:#4F46E5}
+
+.cHead{display:flex;align-items:center;padding:0 15px;height:24px;background:#F0F0F2;
+  border-top:1px solid #E1E1E4;border-bottom:1px solid #E1E1E4;
+  font:600 8.5px "IBM Plex Sans",sans-serif;letter-spacing:.13em;text-transform:uppercase;color:#96979F}
+.cGrp{padding:9px 15px 5px;font:600 8.5px "IBM Plex Sans",sans-serif;letter-spacing:.13em;
+  text-transform:uppercase;color:#A9AAB1;background:#F7F7F8}
+.cLine{display:flex;align-items:center;padding:0 15px;height:36px;background:#fff;
+  border-bottom:1px solid #EDEDF0;position:relative}
+.cN{flex:1;min-width:0;display:flex;align-items:baseline;gap:7px;overflow:hidden}
+.cN b{font:500 12.5px "IBM Plex Sans",sans-serif;white-space:nowrap}
+.cN i{font-style:normal;font-size:10.5px;color:#9A9BA2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cS{width:84px;flex:none;font:600 8.5px "IBM Plex Sans",sans-serif;letter-spacing:.1em;text-transform:uppercase}
+.cD{width:46px;flex:none;text-align:right;font:400 11px "IBM Plex Mono",monospace;color:#40424A;
+  font-variant-numeric:tabular-nums}
+.cR{width:58px;flex:none;text-align:right;font:400 11px "IBM Plex Mono",monospace;color:#9A9BA2;
+  font-variant-numeric:tabular-nums}
+.cLine.sel{background:#F3F2FF;box-shadow:inset 2px 0 0 #4F46E5}
+
+.c-client{color:#047857} .c-reserve{color:#4F46E5} .c-essai{color:#B45309}
+.c-attente{color:#B45309} .c-sansrep{color:#7B7C84} .c-refus{color:#B91C1C}
+.c-jamais{color:#111318} .c-stop{color:#7F1D1D}
+
+.cSwipe{position:relative;height:36px;border-bottom:1px solid #EDEDF0;overflow:hidden;background:#4F46E5}
+.cSwipe .rev{position:absolute;inset:0;display:flex;align-items:center;padding:0 15px;
+  font:700 9.5px "IBM Plex Sans",sans-serif;letter-spacing:.13em;text-transform:uppercase;color:#fff}
+.cSwipe .cLine{position:absolute;inset:0;transform:translateX(104px);border-bottom:0;
+  box-shadow:-1px 0 0 #DDDDE2}
+.cSwipe.left{background:#6B7280}
+.cSwipe.left .rev{justify-content:flex-end}
+.cSwipe.left .cLine{transform:translateX(-146px);box-shadow:1px 0 0 #DDDDE2}
+.cHint{padding:7px 15px;font:400 10px "IBM Plex Sans",sans-serif;color:#9A9BA2;background:#F7F7F8;
+  border-bottom:1px solid #EDEDF0}
+.cHint em{font-style:normal;color:#4F46E5;font-weight:600}
+
+.cFoot{position:absolute;left:0;right:0;bottom:0;height:32px;display:flex;align-items:center;
+  justify-content:space-between;padding:0 15px;background:#F0F0F2;border-top:1px solid #E1E1E4;
+  font:400 10px "IBM Plex Sans",sans-serif;color:#8C8D95}
+.cFoot b{font-family:"IBM Plex Mono",monospace;font-weight:500;color:#5F6069}
+
+.cBar{display:flex;align-items:center;gap:10px;padding:10px 15px;background:#fff;border-bottom:1px solid #E1E1E4}
+.cBar .bk{font:500 10.5px "IBM Plex Sans",sans-serif;letter-spacing:.09em;text-transform:uppercase;color:#8C8D95}
+.cBar .ttl{flex:1;font:600 14px "IBM Plex Sans",sans-serif}
+.cBar .idx{font:400 10.5px "IBM Plex Mono",monospace;color:#9A9BA2}
+
+.cResa{padding:12px 15px;background:#fff;border-bottom:1px solid #E1E1E4}
+.cResa .top{display:flex;align-items:baseline;justify-content:space-between}
+.cResa .lb{font:600 8.5px "IBM Plex Sans",sans-serif;letter-spacing:.13em;text-transform:uppercase;color:#8C8D95}
+.cResa .val{font:500 15px "IBM Plex Mono",monospace;color:#4F46E5;font-variant-numeric:tabular-nums}
+.cTrack{height:2px;background:#E7E7EA;margin-top:9px}
+.cTrack i{display:block;height:2px;background:#4F46E5;width:68%}
+.cCap{margin:8px 0 0;font:400 10.5px/1.4 "IBM Plex Sans",sans-serif;color:#7B7C84}
+
+.cKv{display:flex;align-items:baseline;padding:0 15px;height:27px;background:#fff;border-bottom:1px solid #EDEDF0}
+.cKv .k{width:104px;flex:none;font:600 8.5px "IBM Plex Sans",sans-serif;letter-spacing:.13em;
+  text-transform:uppercase;color:#96979F}
+.cKv .v{flex:1;font:400 12px "IBM Plex Sans",sans-serif;color:#26282F}
+.cKv .v.mono{font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-variant-numeric:tabular-nums}
+.cKv .v.q{color:#B45309}
+.cSec{padding:9px 15px 5px;font:600 8.5px "IBM Plex Sans",sans-serif;letter-spacing:.13em;
+  text-transform:uppercase;color:#A9AAB1}
+.cAct{display:flex;align-items:center;gap:11px;padding:0 15px;height:34px;background:#fff;
+  border-bottom:1px solid #EDEDF0}
+.cKey{width:19px;height:19px;flex:none;border:1px solid #DDDDE2;background:#F7F7F8;
+  font:500 10px/17px "IBM Plex Mono",monospace;text-align:center;color:#5F6069}
+.cAct .t{flex:1;font:500 12.5px "IBM Plex Sans",sans-serif}
+.cAct .t small{display:block;font-weight:400;font-size:10.5px;color:#9A9BA2;margin-top:1px}
+.cAct .st{font:600 8.5px "IBM Plex Sans",sans-serif;letter-spacing:.13em;text-transform:uppercase;color:#4F46E5}
+.cAct.dng .t{color:#B91C1C}
+.cAct.dis{background:#FAFAFB}
+.cRad{display:flex;align-items:center;gap:9px;padding:0 15px;height:28px;background:#fff;border-bottom:1px solid #EDEDF0}
+.cRad i{width:9px;height:9px;border-radius:50%;border:1px solid #B6B7BD;flex:none}
+.cRad i.on{border-color:#4F46E5;background:#4F46E5;box-shadow:inset 0 0 0 2px #fff}
+.cRad span{font:400 11.5px "IBM Plex Sans",sans-serif;color:#40424A}
+.cRad span em{font-style:normal;color:#9A9BA2}
+
+.cTot{display:flex;align-items:center;padding:0 15px;height:32px;background:#fff;
+  border-top:1px solid #111318;border-bottom:1px solid #E1E1E4}
+.cTot .k{flex:1;font:600 9px "IBM Plex Sans",sans-serif;letter-spacing:.13em;text-transform:uppercase}
+.cTot .c{width:60px;text-align:right;font:500 11.5px "IBM Plex Mono",monospace}
+.cTot .m{width:78px;text-align:right;font:600 13px "IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
+.cG{display:flex;align-items:center;padding:0 15px;height:28px;background:#fff;border-bottom:1px solid #EDEDF0}
+.cG .k{flex:1;font:400 12px "IBM Plex Sans",sans-serif}
+.cG .c{width:60px;text-align:right;font:400 11.5px "IBM Plex Mono",monospace;color:#7B7C84;font-variant-numeric:tabular-nums}
+.cG .m{width:78px;text-align:right;font:500 12.5px "IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
+.cF{display:flex;align-items:center;gap:10px;padding:0 15px;height:26px;background:#fff;border-bottom:1px solid #EDEDF0}
+.cF .k{width:112px;flex:none;font:400 11.5px "IBM Plex Sans",sans-serif}
+.cF .t{flex:1;height:1px;background:#E7E7EA;position:relative}
+.cF .t i{position:absolute;left:0;top:-1px;height:3px;background:#4F46E5}
+.cF .t i.mut{background:#C4C5CB}
+.cF .n{width:38px;text-align:right;font:500 11.5px "IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
+.cF .p{width:36px;text-align:right;font:400 10.5px "IBM Plex Mono",monospace;color:#9A9BA2}
+.cEnd{padding:12px 15px;font:400 10.5px/1.45 "IBM Plex Sans",sans-serif;color:#7B7C84}
+.cKeysBar{display:flex;gap:14px;padding:8px 15px 0;flex-wrap:wrap}
+.cKeysBar span{display:flex;align-items:center;gap:5px;font:400 10px "IBM Plex Sans",sans-serif;color:#8C8D95}
+.cKeysBar kbd{font:500 9px "IBM Plex Mono",monospace;color:#5F6069;border:1px solid #DDDDE2;
+  background:#fff;padding:2px 4px}
+</style>
+<meta name="robots" content="noindex, nofollow"><style>.envb{position:fixed;top:0;left:0;right:0;z-index:99999;height:20px;display:flex;align-items:center;justify-content:center;gap:8px;background:#4F8BD4;color:#0B0B0C;font:600 10px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.14em;pointer-events:none}body{padding-top:20px!important} print{.envb{display:none}}</style></head>
+<body><div class="envb">LABO · v1.0.0+6e4ad0a</div>
+
+<header class="board">
+  <div class="wrap">
+    <p class="kicker">Resto IA · application de l’apporteur d’affaires</p>
+    <h1>Trois directions</h1>
+    <p class="sub">Porte-à-porte chez les kebabs, tacos et pizzerias indépendants. Lyon 7<sup>e</sup> — secteur Guillotière, 42 cibles. Contenu réel : 12 prospects, 8 statuts, réservation de 3 jours, commission de 7,50 € par mois et par client actif.</p>
+  </div>
+</header>
+
+<!-- ===================================================================
+     A — CARTE D’ABORD
+     =================================================================== -->
+<section class="dir dA">
+<div class="wrap">
+  <div class="dirhead"><span class="letter">A</span><h2>Carte d’abord</h2><span class="tag">Esprit transport urbain</span></div>
+
+  <svg width="0" height="0" aria-hidden="true" style="position:absolute"><defs>
+    <g id="aMapG">
+      <rect x="0" y="0" width="390" height="844" fill="#11141A"/>
+      <!-- îlots -->
+      <g fill="#1A1F27">
+        <rect x="132" y="30" width="62" height="52"/><rect x="204" y="30" width="80" height="52"/>
+        <rect x="294" y="18" width="96" height="64"/>
+        <rect x="132" y="98" width="62" height="70"/><rect x="204" y="98" width="80" height="70"/>
+        <rect x="294" y="98" width="96" height="70"/>
+        <rect x="128" y="190" width="66" height="72"/><rect x="204" y="190" width="80" height="72"/>
+        <rect x="294" y="190" width="96" height="72"/>
+        <rect x="120" y="288" width="74" height="70"/><rect x="204" y="288" width="80" height="70"/>
+        <rect x="294" y="288" width="96" height="70"/>
+        <rect x="112" y="386" width="82" height="70"/><rect x="204" y="386" width="80" height="70"/>
+        <rect x="294" y="386" width="96" height="70"/>
+        <rect x="104" y="484" width="90" height="70"/><rect x="204" y="484" width="80" height="70"/>
+        <rect x="294" y="484" width="96" height="70"/>
+        <rect x="96" y="582" width="98" height="70"/><rect x="204" y="582" width="80" height="70"/>
+        <rect x="88" y="680" width="106" height="70"/><rect x="204" y="680" width="80" height="70"/>
+        <rect x="294" y="680" width="96" height="70"/>
+        <rect x="120" y="778" width="74" height="66"/><rect x="204" y="778" width="80" height="66"/>
+        <rect x="294" y="778" width="96" height="66"/>
+      </g>
+      <!-- parc -->
+      <rect x="294" y="582" width="96" height="70" fill="#16291D"/>
+      <!-- rivière -->
+      <path d="M-14,-24 C34,140 -4,318 44,468 C78,574 56,700 92,870" fill="none" stroke="#0F3143" stroke-width="72"/>
+      <path d="M-14,-24 C34,140 -4,318 44,468 C78,574 56,700 92,870" fill="none" stroke="#14516C" stroke-width="1.6" opacity=".85"/>
+      <!-- pont -->
+      <path d="M8,352 L86,338" stroke="#39424E" stroke-width="9"/>
+      <!-- rues -->
+      <g stroke="#262E38" fill="none">
+        <path d="M86,90 H390" stroke-width="6"/>
+        <path d="M84,180 H390" stroke-width="6"/>
+        <path d="M78,276 H390" stroke-width="6"/>
+        <path d="M72,374 H390" stroke-width="6"/>
+        <path d="M66,472 H390" stroke-width="6"/>
+        <path d="M58,570 H390" stroke-width="6"/>
+        <path d="M52,668 H390" stroke-width="6"/>
+        <path d="M74,766 H390" stroke-width="6"/>
+        <path d="M198,0 V844" stroke-width="6"/>
+        <path d="M288,0 V844" stroke-width="6"/>
+      </g>
+      <!-- avenue principale -->
+      <path d="M126,0 V844" stroke="#333C47" stroke-width="13"/>
+      <path d="M0,346 C90,344 260,332 390,326" stroke="#333C47" stroke-width="12" fill="none"/>
+      <!-- toponymie -->
+      <text x="133" y="640" fill="#59626E" font-family="Archivo,Inter,sans-serif" font-size="8.5"
+            font-weight="600" letter-spacing="1.6" transform="rotate(-90 133 640)">AV. JEAN-JAURÈS</text>
+      <text x="216" y="322" fill="#59626E" font-family="Archivo,Inter,sans-serif" font-size="8.5"
+            font-weight="600" letter-spacing="1.6">COURS GAMBETTA</text>
+      <text x="40" y="700" fill="#2F6E8C" font-family="Archivo,Inter,sans-serif" font-size="8.5"
+            font-weight="600" letter-spacing="1.6" transform="rotate(-78 40 700)">LE RHÔNE</text>
+      <text x="304" y="622" fill="#3C6B4C" font-family="Archivo,Inter,sans-serif" font-size="8"
+            font-weight="600" letter-spacing="1.4">SQUARE</text>
+
+      <!-- prospects -->
+      <circle cx="124" cy="120" r="6" fill="#00C26E"/>
+      <circle cx="296" cy="132" r="6" fill="#FFFFFF"/>
+      <circle cx="208" cy="148" r="6" fill="#00C26E"/>
+      <circle cx="352" cy="196" r="6" fill="#FF3B30"/>
+      <circle cx="150" cy="210" r="6" fill="#FFFFFF"/>
+      <circle cx="310" cy="246" r="6" fill="#8BE04E"/>
+      <circle cx="170" cy="258" r="9" fill="#3FA9FF"/>
+      <circle cx="170" cy="258" r="15" fill="none" stroke="#3FA9FF" stroke-width="1.5" opacity=".55"/>
+      <circle cx="238" cy="300" r="7" fill="#00C26E"/>
+      <circle cx="330" cy="342" r="6" fill="#7C8794"/>
+      <circle cx="262" cy="372" r="6" fill="#FFC53D"/>
+      <circle cx="146" cy="400" r="6" fill="#FF8A3D"/>
+      <circle cx="270" cy="428" r="6" fill="#00C26E"/>
+
+      <!-- position -->
+      <circle cx="196" cy="318" r="26" fill="#3FA9FF" opacity=".14"/>
+      <circle cx="196" cy="318" r="9.5" fill="#FFFFFF"/>
+      <circle cx="196" cy="318" r="6" fill="#1E9BFF"/>
+
+      <!-- étiquettes -->
+      <text x="252" y="296" fill="#E7EBF0" font-family="Inter,sans-serif" font-size="9.5" font-weight="600">Istanbul Kebab</text>
+      <text x="252" y="307" fill="#7C8794" font-family="Inter,sans-serif" font-size="8">120 m</text>
+      <text x="152" y="238" fill="#E7EBF0" font-family="Inter,sans-serif" font-size="9.5" font-weight="600" text-anchor="end">Tacos Avenue</text>
+      <text x="152" y="249" fill="#7C8794" font-family="Inter,sans-serif" font-size="8" text-anchor="end">180 m · réservé</text>
+      <text x="276" y="369" fill="#E7EBF0" font-family="Inter,sans-serif" font-size="9.5" font-weight="600">Pizza Del Sole</text>
+    </g>
+  </defs></svg>
+
+  <div class="stage">
+
+    <!-- A1 : arrivée -->
+    <div class="shot">
+      <div class="fr"><div class="screen aScr">
+        <div class="aMap"><svg viewBox="0 0 390 844" width="390" height="844"><use href="#aMapG"/></svg></div>
+
+        <div class="aStat"><b>10:05</b><div class="sg">
+          <svg width="17" height="11" viewBox="0 0 17 11"><rect x="0" y="7" width="3" height="4" fill="#fff"/><rect x="4.5" y="5" width="3" height="6" fill="#fff"/><rect x="9" y="2.5" width="3" height="8.5" fill="#fff"/><rect x="13.5" y="0" width="3" height="11" fill="#fff" opacity=".4"/></svg>
+          <svg width="25" height="12" viewBox="0 0 25 12"><rect x="0.5" y="1" width="20" height="10" rx="2.5" fill="none" stroke="#fff" opacity=".6"/><rect x="2.5" y="3" width="13" height="6" fill="#fff"/><rect x="22" y="4" width="2" height="4" rx="1" fill="#fff" opacity=".6"/></svg>
+        </div></div>
+
+        <div class="aZone"><i></i><span>Lyon 7<sup>e</sup> — Guillotière</span></div>
+
+        <div class="aFab" style="bottom:410px">
+          <svg width="26" height="26" viewBox="0 0 24 24"><path d="M12 2 L21 21 L12 16.5 L3 21 Z" fill="#08130D"/></svg>
+        </div>
+
+        <div class="aSheet" style="top:452px">
+          <div class="aGrab"></div>
+          <div class="aHd"><h3>12 à moins d’un kilomètre</h3><p>42 cibles dans le secteur · à pied</p></div>
+
+          <div class="aRow"><i class="aDot bg-client"></i>
+            <div class="n"><b>Istanbul Kebab<em class="s-client">Client actif</em></b><span>Kebab · 34 av. Jean-Jaurès</span></div>
+            <div class="d"><b>120 m</b><span>2 min</span></div></div>
+
+          <div class="aRow"><i class="aDot bg-reserve"></i>
+            <div class="n"><b>Tacos Avenue<em class="s-reserve">Réservé 2 j 04 h</em></b><span>Tacos · 7 rue Sébastien Gryphe</span></div>
+            <div class="d"><b>180 m</b><span>2 min</span></div></div>
+
+          <div class="aRow"><i class="aDot bg-attente"></i>
+            <div class="n"><b>Pizza Del Sole<em class="s-attente">En attente</em></b><span>Pizza · 21 rue de Marseille</span></div>
+            <div class="d"><b>260 m</b><span>3 min</span></div></div>
+
+          <div class="aRow"><i class="aDot bg-jamais"></i>
+            <div class="n"><b>Burger 7<em class="s-jamais">Jamais démarché</em></b><span>Burger · 3 place Gabriel Péri</span></div>
+            <div class="d"><b>300 m</b><span>4 min</span></div></div>
+
+          <div class="aRow"><i class="aDot bg-essai"></i>
+            <div class="n"><b>Snack Étoile<em class="s-essai">Période d’essai</em></b><span>Kebab · 88 grande rue · jour 5 sur 14</span></div>
+            <div class="d"><b>420 m</b><span>6 min</span></div></div>
+
+          <div class="aRow"><i class="aDot bg-client"></i>
+            <div class="n"><b>Le Bosphore<em class="s-client">Client actif</em></b><span>Kebab · 12 rue Salomon</span></div>
+            <div class="d"><b>510 m</b><span>7 min</span></div></div>
+
+          <div class="aRow"><i class="aDot bg-sansrep"></i>
+            <div class="n"><b>Chicken Street<em class="s-sansrep">Sans réponse</em></b><span>Burger · 45 cours Gambetta · relance jeudi</span></div>
+            <div class="d"><b>540 m</b><span>7 min</span></div></div>
+
+          <div class="aRow"><i class="aDot bg-refus"></i>
+            <div class="n"><b>Pizzeria Napoli<em class="s-refus">Refus</em></b><span>Pizza · 2 rue Béchevelin · retour en janvier</span></div>
+            <div class="d"><b>610 m</b><span>8 min</span></div></div>
+
+          <div class="aRow"><i class="aDot bg-jamais"></i>
+            <div class="n"><b>Tacos King<em class="s-jamais">Jamais démarché</em></b><span>Tacos · 19 av. Berthelot</span></div>
+            <div class="d"><b>700 m</b><span>9 min</span></div></div>
+
+          <div class="aRow"><i class="aDot bg-stop"></i>
+            <div class="n"><b>Sandwicherie Sud<em class="s-stop">Ne plus contacter</em></b><span>Kebab · 60 rue Pasteur</span></div>
+            <div class="d"><b>760 m</b><span>10 min</span></div></div>
+        </div>
+      </div></div>
+      <p class="cap">A1 · arrivée dans la rue</p>
+    </div>
+
+    <!-- A2 : fiche -->
+    <div class="shot">
+      <div class="fr"><div class="screen aScr">
+        <div class="aMap" style="height:163px;overflow:hidden">
+          <svg viewBox="110 240 220 92" width="390" height="163" preserveAspectRatio="xMidYMid slice"><use href="#aMapG"/></svg>
+          <svg viewBox="110 240 220 92" width="390" height="163" preserveAspectRatio="xMidYMid slice" style="position:absolute;top:0;left:0">
+            <path d="M196,318 L196,296 L176,296 L176,266" fill="none" stroke="#00C26E" stroke-width="3.4"
+                  stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 5"/>
+          </svg>
+        </div>
+
+        <div class="aStat"><b>10:05</b><div class="sg">
+          <svg width="17" height="11" viewBox="0 0 17 11"><rect x="0" y="7" width="3" height="4" fill="#fff"/><rect x="4.5" y="5" width="3" height="6" fill="#fff"/><rect x="9" y="2.5" width="3" height="8.5" fill="#fff"/><rect x="13.5" y="0" width="3" height="11" fill="#fff" opacity=".4"/></svg>
+          <svg width="25" height="12" viewBox="0 0 25 12"><rect x="0.5" y="1" width="20" height="10" rx="2.5" fill="none" stroke="#fff" opacity=".6"/><rect x="2.5" y="3" width="13" height="6" fill="#fff"/><rect x="22" y="4" width="2" height="4" rx="1" fill="#fff" opacity=".6"/></svg>
+        </div></div>
+        <div class="aBack"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M15 5 L8 12 L15 19" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+        <div class="aSheet" style="top:150px">
+          <div class="aGrab"></div>
+          <div class="aTitle">
+            <div class="st s-reserve">Réservé par vous</div>
+            <h2>Tacos Avenue</h2>
+            <p>Tacos · 7 rue Sébastien Gryphe</p>
+            <div class="km">180 m<i>·</i>2 min à pied<i>·</i>ouvert à 11h30</div>
+          </div>
+
+          <div class="aResa">
+            <div class="lb">« Je prends ce prospect » — jusqu’au 19/09</div>
+            <div class="cd"><b>2 j 04 h 15</b><span>restantes</span></div>
+            <div class="aBar"><i></i></div>
+            <p class="ft">Sans action, il retourne au commun : un autre commercial peut le prendre tout de suite, vous dans 2 mois.</p>
+          </div>
+
+          <div class="aLog">
+            <div class="lb">Dernière action</div>
+            <div>16/09 · porte-à-porte 14h20 — preuve : photo de devanture</div>
+            <div class="q">« déjà débordé, rappeler hors service »</div>
+          </div>
+
+          <div class="aAct">
+            <div class="aCta">
+              <svg width="18" height="18" viewBox="0 0 24 24"><path d="M4 12.5 L9.5 18 L20 6.5" fill="none" stroke="#08130D" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Marquer une visite
+            </div>
+            <div class="aProof"><span>Appel pro</span><span>Message Resto IA</span><span class="on">Photo devanture</span></div>
+            <p class="aNote">Photo sans visages ni plaques. L’audio ne sert pas de preuve.</p>
+          </div>
+
+          <div class="aLink" style="margin-top:12px">
+            <div>Planifier un rappel<small>Hors service — après 15h ou avant 18h</small></div><span class="aChev">›</span></div>
+          <div class="aLink">
+            <div>Passer en essai gratuit<small>14 jours, puis engagement de 6 mois</small></div><span class="aChev">›</span></div>
+          <div class="aLink dng">
+            <div>Ne plus contacter<small>Opposition définitive, respectée par tous</small></div><span class="aChev">›</span></div>
+        </div>
+      </div></div>
+      <p class="cap">A2 · fiche prospect</p>
+    </div>
+
+    <!-- A3 : gains -->
+    <div class="shot">
+      <div class="fr"><div class="screen aScr">
+        <div class="aMap" style="height:118px;overflow:hidden;opacity:.5">
+          <svg viewBox="0 210 390 110" width="390" height="110"><use href="#aMapG"/></svg>
+        </div>
+        <div class="aStat"><b>10:05</b><div class="sg">
+          <svg width="17" height="11" viewBox="0 0 17 11"><rect x="0" y="7" width="3" height="4" fill="#fff"/><rect x="4.5" y="5" width="3" height="6" fill="#fff"/><rect x="9" y="2.5" width="3" height="8.5" fill="#fff"/><rect x="13.5" y="0" width="3" height="11" fill="#fff" opacity=".4"/></svg>
+          <svg width="25" height="12" viewBox="0 0 25 12"><rect x="0.5" y="1" width="20" height="10" rx="2.5" fill="none" stroke="#fff" opacity=".6"/><rect x="2.5" y="3" width="13" height="6" fill="#fff"/><rect x="22" y="4" width="2" height="4" rx="1" fill="#fff" opacity=".6"/></svg>
+        </div></div>
+        <div class="aBack"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M15 5 L8 12 L15 19" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+
+        <div class="aSheet" style="top:112px">
+          <div class="aGrab"></div>
+          <div class="aBig">
+            <div class="lb">Septembre — Nadia B.</div>
+            <div class="v">142,50 €</div>
+            <div class="u">19 clients actifs × 7,50 € par mois. Tant qu’ils restent abonnés.</div>
+          </div>
+
+          <div class="aSec">Quatre derniers mois</div>
+          <div class="aMonth"><span class="m">Juin</span><span class="t"><i style="width:32%"></i></span><span class="v">45,00 €</span></div>
+          <div class="aMonth"><span class="m">Juillet</span><span class="t"><i style="width:58%"></i></span><span class="v">82,50 €</span></div>
+          <div class="aMonth"><span class="m">Août</span><span class="t"><i style="width:79%"></i></span><span class="v">112,50 €</span></div>
+          <div class="aMonth"><span class="m">Septembre</span><span class="t"><i style="width:100%"></i></span><span class="v">142,50 €</span></div>
+
+          <div class="aSec">Entonnoir du secteur</div>
+          <div class="aFun">
+            <div><span class="f">Chargés au CRM</span><span class="t"><i style="width:100%"></i></span><span class="n">248</span></div>
+            <div><span class="f">Visités</span><span class="t"><i style="width:71%"></i></span><span class="n">176</span></div>
+            <div><span class="f">Démos faites</span><span class="t"><i style="width:22%"></i></span><span class="n">54</span></div>
+            <div><span class="f">Essais lancés</span><span class="t"><i class="g" style="width:12%"></i></span><span class="n">31</span></div>
+            <div><span class="f">Clients payants</span><span class="t"><i class="g" style="width:8%"></i></span><span class="n">21</span></div>
+            <div><span class="f">Ne plus contacter</span><span class="t"><i class="r" style="width:4%"></i></span><span class="n">9</span></div>
+          </div>
+
+          <div class="aLink" style="margin-top:10px">
+            <div>Règles du mandat<small>Réservation 3 j · protection 30 j · fin de mandat</small></div><span class="aChev">›</span></div>
+        </div>
+      </div></div>
+      <p class="cap">A3 · gains du mois</p>
+    </div>
+
+  </div>
+
+  <dl class="notes">
+    <div><dt>Principe</dt><dd>La ville décide. On lit la rue, pas un tableau.</dd></div>
+    <div><dt>Navigation</dt><dd>Une carte, une feuille à trois hauteurs, une seule action ronde.</dd></div>
+    <div><dt>Hiérarchie</dt><dd>Distance, puis statut, puis nom. Le détail attend la feuille haute.</dd></div>
+    <div><dt>Ce que ça coûte</dt><dd>Carte à tenir à jour et lisible en plein soleil ; passé vingt lignes, la feuille redevient un annuaire.</dd></div>
+  </dl>
+</div>
+</section>
+
+<!-- ===================================================================
+     B — PILE DU JOUR
+     =================================================================== -->
+<section class="dir dB">
+<div class="wrap">
+  <div class="dirhead"><span class="letter">B</span><h2>Pile du jour</h2><span class="tag">Un paquet de fiches</span></div>
+
+  <div class="stage">
+
+    <!-- B1 : arrivée -->
+    <div class="shot">
+      <div class="fr"><div class="screen bScr" style="background:#C9A800;color:#101010">
+        <div class="bTop"><b>10:05</b><b>· · ·  ▮▮▮</b></div>
+        <div class="bCount">
+          <b>7 restants aujourd’hui</b>
+          <div class="bKeys">
+            <i class="on" style="background:#FFD400"></i><i style="background:#1B4DFF"></i><i style="background:#6B7280"></i>
+            <i style="background:#FF5A1F"></i><i style="background:#FF9E00"></i><i style="background:#7C3AED"></i>
+            <i style="background:#00A968"></i><i style="background:#D7263D"></i>
+          </div>
+        </div>
+
+        <div class="bPeek2" style="background:#6B7280;color:#fff"><div class="bPeekN">Chicken Street — sans réponse</div></div>
+        <div class="bPeek" style="background:#FFD400;color:#101010"><div class="bPeekN">Tacos King — jamais démarché</div></div>
+
+        <div class="bCard" style="background:#FFD400;color:#101010">
+          <div class="bSt"><span>Jamais démarché</span><span>300 m · 4 min</span></div>
+          <h2 class="bName" style="font-size:66px">Burger 7</h2>
+          <p class="bMeta">Burger — 3 place Gabriel Péri<br>Lyon 7<sup>e</sup>, secteur Guillotière</p>
+          <div class="bRule"></div>
+          <p class="bLab">Dernière objection</p>
+          <p class="bQuote">Aucune visite enregistrée.</p>
+          <p class="bSub">Personne ne l’a jamais démarché. Disponible dans le canal autorisé.</p>
+
+          <div class="bGrow"></div>
+
+          <div class="bGo" style="background:#101010;color:#FFD400">Je le prends — 3 jours</div>
+          <div class="bPair">
+            <div>Plus tard</div>
+            <div style="color:#B3001B">Ne plus contacter</div>
+          </div>
+        </div>
+      </div></div>
+      <p class="cap">B1 · arrivée dans la rue</p>
+    </div>
+
+    <!-- B2 : fiche -->
+    <div class="shot">
+      <div class="fr"><div class="screen bScr" style="background:#1439C9;color:#fff">
+        <div class="bTop"><b>10:05</b><b>· · ·  ▮▮▮</b></div>
+        <div class="bCount"><b>Fiche 2 sur 12</b>
+          <div class="bKeys">
+            <i style="background:#FFD400"></i><i class="on" style="background:#1B4DFF"></i><i style="background:#6B7280"></i>
+            <i style="background:#FF5A1F"></i><i style="background:#FF9E00"></i><i style="background:#7C3AED"></i>
+            <i style="background:#00A968"></i><i style="background:#D7263D"></i>
+          </div>
+        </div>
+
+        <div class="bPeek2" style="background:#FF9E00;color:#101010"><div class="bPeekN">Pizza Del Sole — en attente</div></div>
+        <div class="bPeek" style="background:#7C3AED;color:#fff"><div class="bPeekN">Snack Étoile — période d’essai</div></div>
+
+        <div class="bCard" style="background:#1B4DFF;color:#fff;padding-top:18px">
+          <div class="bSt"><span>Réservé par vous</span><span>180 m · 2 min</span></div>
+          <div class="bCd">2 J 04 H 15</div>
+          <div class="bCdL">avant retour au commun — expire le 19/09</div>
+          <h2 class="bName" style="font-size:46px;margin-top:18px">Tacos Avenue</h2>
+          <p class="bMeta" style="margin-top:10px">Tacos — 7 rue Sébastien Gryphe</p>
+          <div class="bRule" style="margin-top:16px"></div>
+          <p class="bLab">Dernière objection</p>
+          <p class="bQuote">« Déjà débordé, rappeler hors service »</p>
+          <p class="bSub">16/09 · porte-à-porte 14h20 — preuve : photo de devanture.</p>
+
+          <div class="bGrow"></div>
+
+          <div class="bWhite">Marquer une visite</div>
+          <div class="bSeg"><span>Appel pro</span><span>Message</span><span class="on">Photo devanture</span></div>
+          <div class="bTrio"><div>Rappel</div><div>Essai gratuit</div><div>Ne plus<br>contacter</div></div>
+          <p class="bFoot">Sans action avant le 19/09 : retour au commun, et bloqué 2 mois pour vous.</p>
+        </div>
+      </div></div>
+      <p class="cap">B2 · fiche prospect</p>
+    </div>
+
+    <!-- B3 : argumentaire -->
+    <div class="shot">
+      <div class="fr"><div class="screen bScr" style="background:#0E0E0E;color:#fff">
+        <div class="bTop" style="color:#fff"><b>10:05</b><b>· · ·  ▮▮▮</b></div>
+        <div class="bCard" style="top:44px;padding:20px 22px 18px;box-shadow:none">
+          <div class="bPitchHd"><h2>Pitch</h2><span>20 secondes</span></div>
+          <div class="bSegs"><i></i><i></i><i class="off"></i><i class="off"></i></div>
+
+          <div class="bStep"><b>0–5</b><p>Bonjour, je passe voir les restaurants du quartier. Quand vous êtes en plein rush, les appels que vous ne décrochez pas, ils partent ailleurs.</p></div>
+          <div class="bStep"><b>5–10</b><p>On met un assistant vocal sur votre numéro actuel. Vous le gardez : on active juste le renvoi sur non-réponse, c’est deux minutes chez l’opérateur.</p></div>
+          <div class="bStep"><b>10–15</b><p>Il prend la commande, envoie le récapitulatif par SMS, et rien ne part en cuisine tant que le client n’a pas confirmé.</p></div>
+          <div class="bStep"><b>15–20</b><p>Essai gratuit pour mesurer votre vrai volume d’appels. Un seul tacos récupéré par jour paie déjà le forfait Basic à 32 € par mois. Je vous montre ?</p></div>
+
+          <div class="bDemo"><b>Faire écouter</b><span>Démo d’appel<br>4 répliques réelles</span></div>
+
+          <p class="bObjL">Objections · 5</p>
+          <div class="bObj open">« J’ai pas le temps »</div>
+          <div class="bAns">L’installation prend 10 minutes : vous gardez votre numéro, on active juste le renvoi sur non-réponse. Je peux le faire maintenant, hors rush.</div>
+          <div class="bObj">« Ça va faire robot »</div>
+          <div class="bObj">« Et si l’IA se trompe ? »</div>
+          <div class="bObj">« C’est cher »</div>
+          <div class="bObj">« Je rappelle les gens après »</div>
+        </div>
+      </div></div>
+      <p class="cap">B3 · argumentaire</p>
+    </div>
+
+  </div>
+
+  <dl class="notes">
+    <div><dt>Principe</dt><dd>Une fiche à la fois, trois gestes, aucune décision parasite.</dd></div>
+    <div><dt>Navigation</dt><dd>On avance dans la pile ; la fiche prise devient la fiche de travail.</dd></div>
+    <div><dt>Hiérarchie</dt><dd>Le nom domine, la couleur porte le statut, tout le reste est petit.</dd></div>
+    <div><dt>Ce que ça coûte</dt><dd>Aucune vue d’ensemble, aucune recherche : l’ordre du jour doit être juste avant de sortir.</dd></div>
+  </dl>
+</div>
+</section>
+
+<!-- ===================================================================
+     C — CARNET DE TOURNÉE
+     =================================================================== -->
+<section class="dir dC">
+<div class="wrap">
+  <div class="dirhead"><span class="letter">C</span><h2>Carnet de tournée</h2><span class="tag">Outil de professionnel</span></div>
+
+  <div class="stage">
+
+    <!-- C1 : arrivée -->
+    <div class="shot">
+      <div class="fr"><div class="screen cScr">
+        <div class="cStat"><b>10:05</b><b>Lyon 7<sup>e</sup></b></div>
+        <div class="cCmd"><div class="cField">
+          <svg width="12" height="12" viewBox="0 0 16 16"><circle cx="7" cy="7" r="5" fill="none" stroke="#9A9BA2" stroke-width="1.6"/><path d="M11 11 L15 15" stroke="#9A9BA2" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <span>Restaurant, rue, statut…</span><kbd>⌘K</kbd>
+        </div></div>
+        <div class="cFilt">
+          <span class="on">Tous<b>12</b></span><span>À prendre<b>2</b></span><span>Réservé<b>1</b></span>
+          <span>Rappels<b>2</b></span><span>Essai<b>1</b></span><span>Clients<b>4</b></span>
+        </div>
+
+        <div class="cHead"><span style="flex:1">Restaurant</span><span style="width:84px">Statut</span>
+          <span style="width:46px;text-align:right">Dist.</span><span style="width:58px;text-align:right">Échéance</span></div>
+
+        <div class="cGrp">À moins de 300 m</div>
+        <div class="cLine"><div class="cN"><b>Istanbul Kebab</b><i>Kebab · 34 av. Jean-Jaurès</i></div>
+          <div class="cS c-client">Client</div><div class="cD">120 m</div><div class="cR">—</div></div>
+        <div class="cLine sel"><div class="cN"><b>Tacos Avenue</b><i>Tacos · 7 r. Sébastien Gryphe</i></div>
+          <div class="cS c-reserve">Réservé</div><div class="cD">180 m</div><div class="cR" style="color:#4F46E5">2 j 04 h</div></div>
+        <div class="cLine"><div class="cN"><b>Pizza Del Sole</b><i>Pizza · 21 rue de Marseille</i></div>
+          <div class="cS c-attente">En attente</div><div class="cD">260 m</div><div class="cR">lun 10h</div></div>
+
+        <div class="cGrp">300 m – 1 km</div>
+        <div class="cSwipe">
+          <div class="rev">◀ Je prends — 3 jours</div>
+          <div class="cLine"><div class="cN"><b>Burger 7</b><i>Burger · 3 pl. Gabriel Péri</i></div>
+            <div class="cS c-jamais">Jamais</div><div class="cD">300 m</div><div class="cR">—</div></div>
+        </div>
+        <div class="cLine"><div class="cN"><b>Snack Étoile</b><i>Kebab · 88 grande rue</i></div>
+          <div class="cS c-essai">Essai j5/14</div><div class="cD">420 m</div><div class="cR">—</div></div>
+        <div class="cLine"><div class="cN"><b>Le Bosphore</b><i>Kebab · 12 rue Salomon</i></div>
+          <div class="cS c-client">Client</div><div class="cD">510 m</div><div class="cR">—</div></div>
+        <div class="cLine"><div class="cN"><b>Chicken Street</b><i>Burger · 45 cours Gambetta</i></div>
+          <div class="cS c-sansrep">Sans rép.</div><div class="cD">540 m</div><div class="cR">jeu.</div></div>
+        <div class="cLine"><div class="cN"><b>Pizzeria Napoli</b><i>Pizza · 2 rue Béchevelin</i></div>
+          <div class="cS c-refus">Refus</div><div class="cD">610 m</div><div class="cR">janv.</div></div>
+        <div class="cSwipe left">
+          <div class="rev">Pas maintenant ▶</div>
+          <div class="cLine"><div class="cN"><b>Tacos King</b><i>Tacos · 19 av. Berthelot</i></div>
+            <div class="cS c-jamais">Jamais</div><div class="cD">700 m</div><div class="cR">—</div></div>
+        </div>
+        <div class="cHint">Balayer à droite : <em>je prends</em> · à gauche : <em>pas maintenant</em>.</div>
+        <div class="cLine"><div class="cN"><b>Sandwicherie Sud</b><i>Kebab · 60 rue Pasteur</i></div>
+          <div class="cS c-stop">Ne plus cont.</div><div class="cD">760 m</div><div class="cR">—</div></div>
+        <div class="cLine"><div class="cN"><b>Mama Pizza</b><i>Pizza · 33 rue Chevreul</i></div>
+          <div class="cS c-client">Client</div><div class="cD">820 m</div><div class="cR">—</div></div>
+        <div class="cLine"><div class="cN"><b>Le Comptoir</b><i>Tacos · 12 rue Garibaldi</i></div>
+          <div class="cS c-client">Client</div><div class="cD">900 m</div><div class="cR">—</div></div>
+
+        <div class="cGrp" style="border-top:1px solid #E1E1E4;padding-top:10px">Fin de liste — 12 sur 42 cibles du secteur</div>
+        <div class="cKeysBar">
+          <span><kbd>⏎</kbd>ouvrir</span><span><kbd>P</kbd>je prends</span><span><kbd>V</kbd>visite</span>
+          <span><kbd>R</kbd>rappel</span><span><kbd>X</kbd>ne plus contacter</span>
+        </div>
+        <div class="cEnd" style="padding-top:8px">Chargement du reste du secteur : <b style="color:#4F46E5;font-weight:600">⌘⏎</b>. Les prospects travaillés par un autre commercial n’apparaissent pas.</div>
+        <div class="cFoot"><span>Guillotière · <b>42</b> cibles · <b>12</b> à moins d’1 km</span><span>maj <b>10:05</b></span></div>
+      </div></div>
+      <p class="cap">C1 · arrivée dans la rue</p>
+    </div>
+
+    <!-- C2 : fiche -->
+    <div class="shot">
+      <div class="fr"><div class="screen cScr">
+        <div class="cStat"><b>10:05</b><b>Lyon 7<sup>e</sup></b></div>
+        <div class="cBar"><span class="bk">‹ Tournée</span><span class="ttl">Tacos Avenue</span><span class="idx">2/12</span></div>
+
+        <div class="cResa">
+          <div class="top"><span class="lb">Réservation — je prends ce prospect</span><span class="val">2 j 04 h 15</span></div>
+          <div class="cTrack"><i></i></div>
+          <p class="cCap">Prise le 16/09 à 14h20, expire le 19/09 à 14h20. Sans action : retour au commun, reprise possible par un autre immédiatement, par vous dans 2 mois.</p>
+        </div>
+
+        <div class="cSec">Fiche</div>
+        <div class="cKv"><span class="k">Type</span><span class="v">Tacos</span></div>
+        <div class="cKv"><span class="k">Adresse</span><span class="v">7 rue Sébastien Gryphe</span></div>
+        <div class="cKv"><span class="k">Distance</span><span class="v mono">180 m · 2 min à pied</span></div>
+        <div class="cKv"><span class="k">Statut</span><span class="v c-reserve" style="font-weight:600;font-size:9px;letter-spacing:.1em;text-transform:uppercase">Réservé</span></div>
+        <div class="cKv"><span class="k">Dernière action</span><span class="v mono">16/09 · porte-à-porte 14h20</span></div>
+        <div class="cKv"><span class="k">Preuve</span><span class="v">Photo de devanture</span></div>
+        <div class="cKv"><span class="k">Objection</span><span class="v q">« déjà débordé, rappeler hors service »</span></div>
+
+        <div class="cSec">Actions</div>
+        <div class="cAct dis"><span class="cKey">P</span><span class="t">Je prends ce prospect<small>Réservation de 3 jours</small></span><span class="st">Pris</span></div>
+        <div class="cAct"><span class="cKey">V</span><span class="t">Marquer une visite<small>Preuve obligatoire</small></span><span class="st">⏎</span></div>
+        <div class="cAct"><span class="cKey">R</span><span class="t">Planifier un rappel<small>Hors service</small></span></div>
+        <div class="cAct"><span class="cKey">E</span><span class="t">Passer en essai gratuit<small>14 jours, puis engagement 6 mois</small></span></div>
+        <div class="cAct dng"><span class="cKey">X</span><span class="t">Ne plus contacter<small>Opposition définitive</small></span></div>
+
+        <div class="cSec">Preuve de visite</div>
+        <div class="cRad"><i class="on"></i><span>Photo de devanture <em>— sans visages ni plaques</em></span></div>
+        <div class="cRad"><i></i><span>Appel depuis le numéro professionnel</span></div>
+        <div class="cRad"><i></i><span>Message depuis le canal Resto IA</span></div>
+        <div class="cEnd" style="padding:9px 15px">L’audio ne sert pas de preuve. Géolocalisation ponctuelle, jamais continue.</div>
+
+        <div class="cFoot"><span>↑↓ naviguer · ⏎ ouvrir · ⌫ retour</span><span>protection <b>30 j</b></span></div>
+      </div></div>
+      <p class="cap">C2 · fiche prospect</p>
+    </div>
+
+    <!-- C3 : gains -->
+    <div class="shot">
+      <div class="fr"><div class="screen cScr">
+        <div class="cStat"><b>10:05</b><b>Lyon 7<sup>e</sup></b></div>
+        <div class="cBar"><span class="ttl">Gains — Nadia B.</span><span class="idx">7,50 €/client/mois</span></div>
+
+        <div class="cSec">Commission mensuelle</div>
+        <div class="cHead"><span style="flex:1">Mois</span><span style="width:60px;text-align:right">Clients</span>
+          <span style="width:78px;text-align:right">Commission</span></div>
+        <div class="cG"><span class="k">Juin</span><span class="c">6</span><span class="m">45,00 €</span></div>
+        <div class="cG"><span class="k">Juillet</span><span class="c">11</span><span class="m">82,50 €</span></div>
+        <div class="cG"><span class="k">Août</span><span class="c">15</span><span class="m">112,50 €</span></div>
+        <div class="cG"><span class="k" style="font-weight:600">Septembre</span><span class="c">19</span><span class="m" style="color:#4F46E5">142,50 €</span></div>
+        <div class="cTot"><span class="k">Cumul 4 mois</span><span class="c">—</span><span class="m">382,50 €</span></div>
+
+        <div class="cSec">Entonnoir — Guillotière</div>
+        <div class="cF"><span class="k">Chargés au CRM</span><span class="t"><i class="mut" style="width:100%"></i></span><span class="n">248</span><span class="p">100%</span></div>
+        <div class="cF"><span class="k">Visités</span><span class="t"><i class="mut" style="width:71%"></i></span><span class="n">176</span><span class="p">71%</span></div>
+        <div class="cF"><span class="k">Démos faites</span><span class="t"><i class="mut" style="width:22%"></i></span><span class="n">54</span><span class="p">22%</span></div>
+        <div class="cF"><span class="k">Essais lancés</span><span class="t"><i style="width:13%"></i></span><span class="n">31</span><span class="p">13%</span></div>
+        <div class="cF"><span class="k">Clients payants</span><span class="t"><i style="width:8%"></i></span><span class="n">21</span><span class="p">8%</span></div>
+        <div class="cF"><span class="k">Ne plus contacter</span><span class="t"><i class="mut" style="width:4%"></i></span><span class="n">9</span><span class="p">4%</span></div>
+
+        <div class="cSec">Clients actifs du secteur</div>
+        <div class="cG"><span class="k">Istanbul Kebab <em style="font-style:normal;color:#9A9BA2">· Pro · 12/07</em></span><span class="c">1</span><span class="m">7,50 €</span></div>
+        <div class="cG"><span class="k">Le Bosphore <em style="font-style:normal;color:#9A9BA2">· Basic · 02/08</em></span><span class="c">1</span><span class="m">7,50 €</span></div>
+        <div class="cG"><span class="k">Mama Pizza <em style="font-style:normal;color:#9A9BA2">· Business · 28/08</em></span><span class="c">1</span><span class="m">7,50 €</span></div>
+        <div class="cG"><span class="k">Le Comptoir <em style="font-style:normal;color:#9A9BA2">· Pro · 05/07</em></span><span class="c">1</span><span class="m">7,50 €</span></div>
+        <div class="cSec">Règles</div>
+        <div class="cKv"><span class="k">Réservation</span><span class="v">3 jours, puis retour au commun</span></div>
+        <div class="cKv"><span class="k">Blocage</span><span class="v">2 mois pour le même commercial</span></div>
+        <div class="cKv"><span class="k">Protection</span><span class="v">30 jours depuis la dernière action</span></div>
+        <div class="cKv"><span class="k">Fin de mandat</span><span class="v">Commission jusqu’au bout du cycle de 6 mois</span></div>
+        <div class="cEnd">Gains cumulés et non plafonnés. Aucun quota, aucune sanction.</div>
+
+        <div class="cFoot"><span>Zone <b>Lyon 7<sup>e</sup></b> · <b>42</b> cibles</span><span>maj <b>10:05</b></span></div>
+      </div></div>
+      <p class="cap">C3 · gains du mois</p>
+    </div>
+
+  </div>
+
+  <dl class="notes">
+    <div><dt>Principe</dt><dd>Un carnet dense : tout tient sur un écran, rien ne bouge.</dd></div>
+    <div><dt>Navigation</dt><dd>Barre de commande, flèches, balayage droite/gauche sur la ligne.</dd></div>
+    <div><dt>Hiérarchie</dt><dd>Une ligne = un restaurant ; statut en petites capitales, chiffres alignés.</dd></div>
+    <div><dt>Ce que ça coûte</dt><dd>Aucune notion d’espace réel, cible petite quand on marche : demande de l’habitude.</dd></div>
+  </dl>
+</div>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,279 @@
+/* =========================================================================
+   Resto IA — couche d'ergonomie, posée après theme.css.
+   Elle ne refait pas le design de devis60 : elle corrige ce qui gênait à
+   l'usage sur nos écrans — la barre d'action dorée collée en bas, les cartes
+   bloquées à 60 % de largeur, les blocs trop serrés. Tout le reste (palette,
+   typographies, châssis, composants) reste celui de devis60.
+   ========================================================================= */
+
+/* ---------- 0. l'accent ----------
+   theme.js (la couche de production) repeint l'accent en bleu, mais seulement
+   sur `:root` : le bloc sombre de la feuille d'origine, plus spécifique
+   (`:root:not([data-theme="light"])`), le reprenait et ramenait le doré.
+   On le refixe ici, pour les trois états de thème. */
+:root,
+:root:not([data-theme="light"]),
+:root[data-theme="dark"]{
+  --accent:#7ea2ff;
+  --accent-ink:#b9cbff;
+  --accent-soft:#172a54;
+  --accent-text:#071020;
+  --accent-metal:linear-gradient(120deg,#d6e1ff 0%,#9db8ff 28%,#6f8fff 58%,#acc1ff 100%);
+  --rule-strong:#3a5076;
+}
+
+/* ---------- 1. la barre d'action ne colle plus en bas ----------
+   Les actions d'un écran vivent maintenant dans le flux, à la fin du contenu :
+   elles défilent avec lui au lieu de manger un quart de l'écran en permanence.
+   Seule la barre de saisie de l'appel en direct reste fixe, comme un clavier. */
+.content .ctabar{
+  padding:4px 0 2px;
+  gap:10px;
+}
+.content .ctabar:first-child{padding-top:0}
+
+.actionbar{background:var(--surface);border-top:1px solid var(--rule)}
+.actionbar .ctabar{padding:10px 20px calc(10px + env(safe-area-inset-bottom,0px))}
+
+/* ---------- 2. boutons ---------- */
+.cta{
+  border-radius:14px;
+  padding:13px 16px;
+  font-size:15.5px;
+  font-weight:600;
+  letter-spacing:.005em;
+  background:linear-gradient(135deg,#9db8ff,#6f8fff);
+  color:#071020;
+  border:none;
+  box-shadow:0 10px 24px -14px rgba(111,143,255,.9);
+}
+.cta:active{transform:translateY(1px)}
+.cta svg{stroke:#071020}
+
+.sec{
+  border-radius:14px;
+  padding:12px 14px;
+  font-size:14px;
+  font-weight:500;
+  background:var(--surface-2);
+  border:1px solid var(--rule);
+  color:var(--ink-2);
+}
+.sec:active{transform:translateY(1px)}
+.secrow{gap:10px}
+
+/* ---------- 3. cartes ----------
+   devis60 fixe .card à 60 % : c'est fait pour une liste de devis, pas pour des
+   commandes de cuisine ou des réglages. */
+.card{width:100%;min-width:0;border-radius:16px;padding:14px 16px}
+.list{gap:10px;padding-bottom:20px}
+
+/* ---------- 4. respiration ---------- */
+.content{padding-bottom:6px}
+.topbar{padding-top:6px}
+h1{font-size:25px;line-height:1.16}
+.sub{font-size:13.5px;line-height:1.55;color:var(--ink-2)}
+.chip-row{gap:8px;padding-top:12px}
+.chip{padding:6px 12px;font-size:12px;white-space:nowrap}
+.stats{gap:9px;grid-template-columns:repeat(auto-fit,minmax(84px,1fr))}
+.stat{padding:12px 12px;border-radius:14px}
+.stat .v{font-size:22px}
+.stat .l{font-size:9px;line-height:1.3}
+.journaltabs{margin-top:14px;padding:5px}
+.jtab{padding:9px 6px;font-size:12.5px}
+.menu,.acctinfo,.fieldgrp,.lines,.pricecard,.calcdetail{border-radius:16px}
+.note{margin-top:14px;font-size:12.5px;line-height:1.6}
+.alert-banner{border-radius:16px;font-size:12.5px;line-height:1.5}
+
+/* ---------- 5. barre d'onglets ---------- */
+.navbar{padding:8px 8px 22px}
+.navitem{gap:5px;opacity:.55}
+.navitem.on{opacity:1}
+.navitem span{font-size:10px;letter-spacing:.04em}
+
+/* ---------- 6. écran de connexion ---------- */
+.landing{gap:8px}
+.landing h1{font-size:30px}
+.landing .sub{max-width:30ch}
+.landing-btns{margin-top:26px;gap:11px}
+.landing-demo{margin-top:10px;font-size:13px}
+
+/* ---------- 7. l'appel en direct ---------- */
+.thread{gap:14px;padding-bottom:18px}
+.row.me .bub{border-radius:18px 18px 6px 18px}
+.row.bot .bub{font-size:15px;line-height:1.55}
+.quickreplies{padding:10px 16px 2px}
+.qreply{padding:9px 15px}
+.composer{padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px))}
+
+/* ---------- 8. feuille coulissante ---------- */
+.docsheet{border-radius:0 0 26px 26px}
+.docsheet-bar{padding:15px 18px}
+.docsheet-bar b{font-family:var(--f-display);font-size:16.5px;font-weight:600}
+.docsheet-body{padding:16px 18px 30px}
+
+/* ---------- 9. tuiles de sélection ---------- */
+.m{border-radius:14px;padding:13px 6px}
+.grid{gap:9px}
+
+/* ---------- 10. mouvement ----------
+   Une transition courte sur ce qui change d'état, rien de plus. */
+.cta,.sec,.qchip,.qreply,.jtab,.m,.mkt-catchip,.pill,.menurow,.navitem{
+  transition:background-color .18s ease,border-color .18s ease,color .18s ease,transform .12s ease;
+}
+@media (prefers-reduced-motion:reduce){
+  .cta,.sec,.qchip,.qreply,.jtab,.m,.mkt-catchip,.pill,.menurow,.navitem{transition:none}
+}
+
+/* ---------- 11. système produit v1.8 ----------
+   Chaque rôle a une couleur mais partage les mêmes repères : action urgente
+   en premier, informations secondaires ensuite, réglages à l'écart du flux.
+   Cela évite de réapprendre l'interface en changeant d'application. */
+#appwrap[data-app="gerant"]{--accent:#7ea2ff;--accent-ink:#bfd0ff;--accent-soft:#182a55;--accent-metal:linear-gradient(120deg,#dbe5ff,#82a5ff 55%,#b6caff)}
+#appwrap[data-app="cuisine"]{--accent:#56d3a0;--accent-ink:#9bf0cb;--accent-soft:#103e31;--accent-metal:linear-gradient(120deg,#cffbe7,#65dca8 55%,#9aebc7)}
+#appwrap[data-app="commercial"]{--accent:#bda8ff;--accent-ink:#d7ccff;--accent-soft:#30225d;--accent-metal:linear-gradient(120deg,#eee9ff,#bba2ff 55%,#d9cdff)}
+
+.screen .content{padding:14px 18px 10px;scroll-padding-bottom:32px}
+.screen .topbar{padding:4px 4px 14px;border-bottom:1px solid color-mix(in srgb,var(--rule) 78%,transparent)}
+.screen .topbar h1{font-size:27px;letter-spacing:-.055em;margin-top:5px}
+.screen .topbar .sub{margin-top:5px;max-width:31ch;color:var(--ink-2)}
+.ui-workspace-mark{margin-bottom:12px}
+.ui-workspace-mark em{font-size:9px;letter-spacing:.11em;color:var(--accent-ink);font-style:normal}
+
+/* Une hiérarchie plus nette : les cartes sont des unités de travail, pas des
+   boîtes décoratives. */
+.card,.factcard,.mkt-card,.pricecard,.lines,.acctinfo,.menu,.calcdetail{
+  border-color:color-mix(in srgb,var(--rule-strong) 68%,transparent);
+  box-shadow:0 10px 25px -23px #000, inset 0 1px 0 rgba(255,255,255,.025);
+}
+.card,.factcard,.mkt-card{border-radius:17px}
+.card{gap:9px;padding:15px 16px}
+.card .who,.mkt-title{font-size:15px;font-weight:650;letter-spacing:-.015em}
+.card .job{line-height:1.45}
+.factcard{padding:14px 15px;background:linear-gradient(135deg,color-mix(in srgb,var(--accent-soft) 76%,var(--surface)),var(--surface))}
+.fc-btn{border-radius:11px}
+.alert-banner{border-color:color-mix(in srgb,var(--accent) 37%,var(--rule));background:color-mix(in srgb,var(--accent-soft) 54%,var(--surface));margin:2px 0 14px}
+.pill{font-weight:600;letter-spacing:.015em}
+.chip{background:color-mix(in srgb,var(--surface-2) 82%,var(--accent-soft));border-color:color-mix(in srgb,var(--rule-strong) 74%,var(--accent))}
+
+/* Les statistiques ne rivalisent plus avec la file de production. */
+.stats{margin:12px 0 5px;gap:8px}
+.stat{background:var(--surface);border:1px solid color-mix(in srgb,var(--rule-strong) 68%,transparent);box-shadow:none}
+.stat .v{font-size:20px;color:var(--ink)}
+.stat .l{margin-top:4px;color:var(--ink-3);font-size:8.5px}
+.fsection{margin:22px 0 9px;color:var(--accent-ink);font-size:10px}
+.list{padding-bottom:8px}
+
+/* Navigation : lisible au pouce, quelle que soit la longueur du libellé. */
+.navbar{padding:7px 8px calc(9px + env(safe-area-inset-bottom,0px));gap:4px;background:color-mix(in srgb,var(--surface) 93%,var(--bg));backdrop-filter:blur(18px)}
+.navbar .navitem{min-width:0;padding:7px 1px;border-radius:11px;flex:1}
+.navbar .navitem span{font-size:8.5px;letter-spacing:.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.navbar .navitem.on{background:color-mix(in srgb,var(--accent-soft) 82%,transparent);color:var(--accent-ink)}
+.navbar .navitem.on svg{stroke:var(--accent-ink)}
+
+/* Cuisine : les cartes doivent se lire à deux mètres, avec le geste suivant
+   toujours évident. Les jaunes restent explicitement des prévisualisations. */
+#appwrap[data-app="cuisine"] .screen .content{padding-left:16px;padding-right:16px}
+#appwrap[data-app="cuisine"] .topbar{padding-left:2px;padding-right:2px}
+#appwrap[data-app="cuisine"] .card{padding:17px 16px;border-left:3px solid color-mix(in srgb,var(--accent) 68%,var(--rule));background:linear-gradient(115deg,color-mix(in srgb,var(--accent-soft) 26%,var(--surface)),var(--surface) 52%)}
+#appwrap[data-app="cuisine"] .card .who{font-size:17px}
+#appwrap[data-app="cuisine"] .card .job{font-size:14px;color:var(--ink)}
+#appwrap[data-app="cuisine"] .jtab{font-size:11px;padding:9px 5px}
+#appwrap[data-app="cuisine"] .cta{font-size:16px;padding:15px 16px}
+
+/* Page principale cuisine : une surface de travail, pas un tableau de bord.
+   L'en-tête reste volontairement réduit au restaurant et à son état. */
+#appwrap[data-app="cuisine"] .screen{background:
+  radial-gradient(100% 42% at 18% 0%,rgba(55,151,111,.18),transparent 60%),
+  radial-gradient(80% 40% at 100% 45%,rgba(44,107,91,.11),transparent 66%),
+  var(--bg)}
+#appwrap[data-app="cuisine"] [data-kitchen-queue] .topbar[data-no-workspace]{
+  min-height:58px;padding:5px 2px 13px;display:flex;align-items:center;justify-content:space-between;gap:10px
+}
+#appwrap[data-app="cuisine"] [data-kitchen-queue] .topbar[data-no-workspace] h1{
+  margin:0;min-width:0;font-size:23px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis
+}
+#appwrap[data-app="cuisine"] [data-kitchen-queue] .topbar[data-no-workspace] .chip-row{padding:0;flex:none}
+#appwrap[data-app="cuisine"] [data-kitchen-queue] .topbar[data-no-workspace] .pill{white-space:nowrap;padding:6px 9px;font-size:10px}
+#appwrap[data-app="cuisine"] [data-kitchen-queue] .stats{
+  margin:10px 0 8px;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px
+}
+#appwrap[data-app="cuisine"] [data-kitchen-queue] .stat{
+  min-width:0;padding:5px 8px 7px;border:0;border-radius:0;background:transparent;box-shadow:none;
+  border-right:1px solid rgba(123,220,173,.16)
+}
+#appwrap[data-app="cuisine"] [data-kitchen-queue] .stat:last-child{border-right:0}
+#appwrap[data-app="cuisine"] [data-kitchen-queue] .stat .v{font-size:17px;font-family:var(--f-mono);font-weight:500}
+#appwrap[data-app="cuisine"] [data-kitchen-queue] .stat .l{font-size:7.5px;letter-spacing:.055em;line-height:1.25}
+#appwrap[data-app="cuisine"] [data-kitchen-queue] .journaltabs{
+  margin:0 -2px 16px;padding:0;background:transparent;border-radius:0;border-bottom:1px solid rgba(139,225,183,.14);
+  display:flex;gap:0;overflow:hidden
+}
+#appwrap[data-app="cuisine"] [data-kitchen-queue] .jtab{
+  min-width:0;flex:1;padding:10px 3px 9px;border-radius:0;background:transparent;color:var(--ink-3);font-size:10px
+}
+#appwrap[data-app="cuisine"] [data-kitchen-queue] .jtab.on{
+  background:transparent;color:var(--accent-ink);box-shadow:inset 0 -2px 0 var(--accent)
+}
+#appwrap[data-app="cuisine"] [data-kitchen-queue] .jtab .jn{font-size:8px;margin-left:2px;background:transparent;padding:0;color:inherit}
+#appwrap[data-app="cuisine"] [data-kitchen-queue] .body{padding:0 0 8px;gap:17px}
+#appwrap[data-app="cuisine"] [data-kitchen-queue] .fam{gap:8px}
+#appwrap[data-app="cuisine"] [data-kitchen-queue] .fam-h{margin-left:2px;color:rgba(170,239,202,.72)}
+#appwrap[data-app="cuisine"] [data-kitchen-queue] [data-active-orders]{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:8px
+}
+#appwrap[data-app="cuisine"] [data-kitchen-queue] [data-active-orders] .fam-h{grid-column:1/-1}
+#appwrap[data-app="cuisine"] [data-kitchen-queue] .card{
+  position:relative;overflow:hidden;min-width:0;padding:12px 11px;border:1px solid rgba(138,221,177,.16);border-left:2px solid rgba(107,222,161,.76);
+  background:linear-gradient(132deg,rgba(28,55,47,.82),rgba(13,27,23,.91) 64%,rgba(19,42,35,.82));
+  box-shadow:0 14px 28px -25px #000,inset 0 1px 0 rgba(222,255,237,.05)
+}
+#appwrap[data-app="cuisine"] [data-kitchen-queue] .card:before{
+  content:"";position:absolute;inset:0 0 auto;height:1px;background:linear-gradient(90deg,transparent,rgba(158,255,204,.26),transparent)
+}
+#appwrap[data-app="cuisine"] [data-kitchen-queue] .card .row1{align-items:flex-start;gap:5px}
+#appwrap[data-app="cuisine"] [data-kitchen-queue] .card .who{font-size:14px;white-space:normal;overflow:visible;line-height:1.18}
+#appwrap[data-app="cuisine"] [data-kitchen-queue] .card .job{font-size:10px;line-height:1.35}
+#appwrap[data-app="cuisine"] [data-kitchen-queue] .card .row2{margin-top:-3px;gap:4px}
+#appwrap[data-app="cuisine"] [data-kitchen-queue] .card .date{font-size:8.5px}
+#appwrap[data-app="cuisine"] [data-kitchen-queue] .card .amount{font-size:10px}
+#appwrap[data-app="cuisine"] [data-kitchen-queue] .card .pill{font-size:8px;padding:3px 5px;text-align:right;line-height:1.1}
+#appwrap[data-app="cuisine"] [data-kitchen-queue] .card .line{padding:6px 0;font-size:10px;line-height:1.25;border-color:rgba(172,239,203,.11)}
+#appwrap[data-app="cuisine"] [data-kitchen-queue] .card .line .n{min-width:0}
+#appwrap[data-app="cuisine"] [data-kitchen-queue] .card .line .n small{font-size:9px;line-height:1.3;margin-top:2px;overflow-wrap:anywhere}
+#appwrap[data-app="cuisine"] [data-kitchen-queue] .card .cta{margin-top:3px;padding:9px 7px;font-size:11px;line-height:1.1;min-height:34px}
+#appwrap[data-app="cuisine"] [data-kitchen-queue] .calcdetail{
+  margin:0;border:1px solid rgba(133,214,171,.13);background:rgba(14,28,24,.7);box-shadow:inset 0 1px 0 rgba(210,255,232,.035)
+}
+#appwrap[data-app="cuisine"] [data-kitchen-queue] .calcdetail summary{padding:13px 14px;color:var(--ink-2);font-size:12px}
+#appwrap[data-app="cuisine"] [data-kitchen-queue] .calcdetail .calcbody{padding:0 10px 10px;display:flex;flex-direction:column;gap:8px}
+#appwrap[data-app="cuisine"] [data-kitchen-queue] .calcdetail .card{border-left-color:var(--warn);background:rgba(57,43,19,.66)}
+#appwrap[data-app="cuisine"] [data-kitchen-queue] .calcdetail .card .who{font-size:15px}
+#appwrap[data-app="cuisine"] [data-kitchen-queue] .fam .card{animation:kitchen-card-in .34s cubic-bezier(.2,.8,.2,1) both}
+#appwrap[data-app="cuisine"] [data-kitchen-queue] .fam .card:nth-of-type(2){animation-delay:.05s}
+#appwrap[data-app="cuisine"] [data-kitchen-queue] .fam .card:nth-of-type(3){animation-delay:.1s}
+@keyframes kitchen-card-in{from{opacity:0;transform:translateY(9px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+/* Commercial : la liste devient un CRM de terrain — nom, statut et prochaine
+   décision ressortent avant les métriques. */
+#appwrap[data-app="commercial"] .mkt-card{padding:11px;background:linear-gradient(135deg,color-mix(in srgb,var(--accent-soft) 24%,var(--surface)),var(--surface) 55%)}
+#appwrap[data-app="commercial"] .mkt-media{border-color:color-mix(in srgb,var(--accent) 35%,var(--rule))}
+#appwrap[data-app="commercial"] .mkt-delai{color:var(--accent-ink)}
+#appwrap[data-app="commercial"] .mkt-catchip.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-ink)}
+#appwrap[data-app="commercial"] .pricecard{background:linear-gradient(140deg,#21183e,color-mix(in srgb,var(--accent-soft) 72%,#100d1d))}
+
+/* Écran gérant : les réglages restent confortables, le flux "ce soir" est
+   compact et les actions délicates restent secondaires. */
+#appwrap[data-app="gerant"] .ctabar{margin-top:16px;padding-bottom:8px}
+#appwrap[data-app="gerant"] .card:first-child{border-color:color-mix(in srgb,var(--accent) 55%,var(--rule))}
+#appwrap[data-app="gerant"] .journaltabs{margin:10px 0 13px}
+
+@media (max-width:360px){
+  .screen .content{padding-left:14px;padding-right:14px}
+  .screen .topbar h1{font-size:25px}
+  .navbar .navitem span{font-size:8px}
+  .card .who,.mkt-title{font-size:14px}
+}
+@media (prefers-reduced-motion:reduce){
+  #appwrap[data-app="cuisine"] [data-kitchen-queue] .fam .card{animation:none}
+}

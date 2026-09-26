@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Resto IA — refonte UI/UX, phase 1</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --paper:#FCFCFB; --ink:#131416; --ink-2:#4A4E55; --ink-3:#83888F;
+  --rule:#E3E3E0; --rule-strong:#C9C9C4;
+  --accent:#1B4DE4; --bad:#B3261E; --ok:#1B6E4B;
+  --serif:'Source Serif 4',Georgia,serif;
+  --sans:'Inter',system-ui,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--sans);font-size:15px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:860px;margin:0 auto;padding:56px 24px 90px}
+@media(max-width:600px){.wrap{padding:34px 18px 60px}}
+
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3)}
+h1{font-family:var(--serif);font-size:clamp(30px,5vw,44px);line-height:1.1;font-weight:600;margin:10px 0 0;letter-spacing:-.02em}
+.lede{font-family:var(--serif);font-size:19px;line-height:1.55;color:var(--ink-2);margin:16px 0 0;max-width:62ch}
+h2{font-family:var(--serif);font-size:24px;font-weight:600;margin:0;letter-spacing:-.01em}
+h3{font-size:15px;font-weight:600;margin:0}
+p{margin:0}
+
+section{margin-top:56px;border-top:1px solid var(--rule);padding-top:26px}
+.sec-n{display:flex;align-items:baseline;gap:14px;margin-bottom:18px}
+.sec-n .num{font-family:var(--mono);font-size:11px;color:var(--ink-3);letter-spacing:.1em}
+
+/* constat : lignes de mesure, pas de tuiles */
+.mesure{display:grid;gap:0;margin-top:6px}
+.mesure > div{
+  display:grid;grid-template-columns:78px minmax(0,1fr);gap:18px;align-items:baseline;
+  padding:12px 0;border-bottom:1px solid var(--rule);
+}
+.mesure b{font-family:var(--mono);font-size:19px;font-weight:500;letter-spacing:-.02em;color:var(--ink)}
+.mesure span{color:var(--ink-2);font-size:14.5px}
+.mesure em{font-style:normal;color:var(--ink)}
+
+/* conservé */
+.garde{display:grid;gap:0;margin-top:4px}
+.garde > div{padding:14px 0;border-bottom:1px solid var(--rule);display:grid;grid-template-columns:104px minmax(0,1fr);gap:18px}
+.garde h3{font-size:13px;letter-spacing:.02em}
+.garde p{font-size:14px;color:var(--ink-2)}
+
+/* références */
+.refs{columns:2;column-gap:32px;margin-top:4px}
+@media(max-width:600px){.refs{columns:1}}
+.refs p{break-inside:avoid;padding:9px 0;border-bottom:1px solid var(--rule);font-size:14px;color:var(--ink-2)}
+.refs b{color:var(--ink);font-weight:600}
+.refs a{color:var(--accent);text-decoration:none}
+.refs a:hover{text-decoration:underline}
+
+/* les neuf directions */
+.app-bloc{margin-top:30px}
+.app-titre{display:flex;align-items:baseline;justify-content:space-between;gap:16px;border-bottom:2px solid var(--ink);padding-bottom:8px}
+.app-titre .but{font-size:13.5px;color:var(--ink-2)}
+.dirs{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+@media(max-width:640px){.dirs{grid-template-columns:1fr}}
+.dir{padding:18px 20px 20px 0;border-bottom:1px solid var(--rule)}
+.dir + .dir{border-left:1px solid var(--rule);padding-left:20px}
+@media(max-width:640px){.dir + .dir{border-left:0;padding-left:0}}
+.dir .lettre{font-family:var(--mono);font-size:11px;color:var(--ink-3);letter-spacing:.1em}
+.dir h3{margin:5px 0 7px;font-size:16px;font-family:var(--serif);font-weight:600}
+.dir p{font-size:13.5px;color:var(--ink-2);line-height:1.5}
+.voir{
+  display:inline-block;margin-top:18px;font-size:14px;font-weight:500;color:var(--accent);
+  text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:1px;
+}
+
+.decision{margin-top:26px;padding:20px 0 0;border-top:2px solid var(--ink)}
+.decision p{max-width:62ch;color:var(--ink-2)}
+.decision .q{font-family:var(--serif);font-size:18px;color:var(--ink);margin-bottom:10px}
+
+.acces{margin-top:38px;border-top:2px solid var(--ink);border-bottom:1px solid var(--rule);padding:20px 0 18px}
+.acces .kicker{display:block;margin-bottom:14px}
+.acces-l{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+@media(max-width:600px){.acces-l{grid-template-columns:1fr}}
+.acces-l a{
+  display:block;padding:14px 20px 14px 0;text-decoration:none;color:var(--ink);
+  border-right:1px solid var(--rule);
+}
+.acces-l a:last-child{border-right:0}
+@media(max-width:600px){
+  .acces-l a{border-right:0;border-bottom:1px solid var(--rule);padding:13px 0}
+  .acces-l a:last-child{border-bottom:0}
+}
+.acces-l a + a{padding-left:20px}
+@media(max-width:600px){.acces-l a + a{padding-left:0}}
+.acces-l b{display:block;font-family:var(--serif);font-size:20px;font-weight:600;color:var(--accent);letter-spacing:-.01em}
+.acces-l a:hover b{text-decoration:underline}
+.acces-l span{display:block;font-size:13px;color:var(--ink-3);margin-top:3px}
+.acces-n{margin-top:14px;font-size:13.5px;color:var(--ink-3)}
+code{font-family:var(--mono);font-size:.9em;background:#F1F1EE;padding:1px 5px}
+</style>
+<meta name="robots" content="noindex, nofollow"><style>.envb{position:fixed;top:0;left:0;right:0;z-index:99999;height:20px;display:flex;align-items:center;justify-content:center;gap:8px;background:#4F8BD4;color:#0B0B0C;font:600 10px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.14em;pointer-events:none}body{padding-top:20px!important} print{.envb{display:none}}</style></head>
+<body><div class="envb">LABO · v1.0.0+6e4ad0a</div>
+<div class="wrap">
+
+  <span class="kicker">Resto IA · refonte UI/UX · phase 1</span>
+  <h1>Trois directions par application.<br>Aucune ne ressemble à l'actuelle.</h1>
+  <p class="lede">L'interface d'aujourd'hui empile des cartes arrondies et met chaque information au même niveau. Les fonctions, elles, sont bonnes : elles sont toutes conservées. Ce qui change, c'est la forme — et elle change pour de bon, pas par retouches.</p>
+
+
+  <div class="acces">
+    <span class="kicker">Les maquettes</span>
+    <div class="acces-l">
+      <a href="cuisine.html"><b>Cuisine</b><span>Rail · Colonnes · Tableau</span></a>
+      <a href="gerant.html"><b>Gérant</b><span>Journal · Console · Fiche</span></a>
+      <a href="commercial.html"><b>Commercial</b><span>Carte · Pile · Carnet</span></a>
+    </div>
+    <p class="acces-n">Trois écrans par direction. Ce qui suit est l'audit qui les justifie.</p>
+  </div>
+
+  <!-- ------------------------------------------------------------- -->
+  <section>
+    <div class="sec-n"><span class="num">01</span><h2>Ce qui ne va pas, mesuré</h2></div>
+    <div class="mesure">
+      <div><b>25</b><span>composants <em>partagés par les trois applications</em> — <code>card</code>, <code>stat</code>, <code>chip</code>, <code>factcard</code>, <code>alert-banner</code>, <code>journaltabs</code>… La cuisine sous le coup de feu et le gérant qui règle sa carte manipulent exactement les mêmes boîtes.</span></div>
+      <div><b>163</b><span>déclarations de <code>border-radius</code> dans la feuille de style. Tout est une pilule ou une carte, donc plus rien ne se distingue.</span></div>
+      <div><b>101</b><span>combinaisons de classes dans la seule application gérant : l'écran est composé d'exceptions, pas d'un système.</span></div>
+      <div><b>17</b><span>usages de la pastille <code>chip</code> répartis un peu partout. Une pastille devrait signaler l'exception&nbsp;; ici elle décore.</span></div>
+      <div><b>0</b><span>hiérarchie réelle. Un délai de service, un numéro de téléphone et un nom de commercial ont le même poids visuel, dans le même contenant.</span></div>
+    </div>
+  </section>
+
+  <!-- ------------------------------------------------------------- -->
+  <section>
+    <div class="sec-n"><span class="num">02</span><h2>Ce qui est conservé, intégralement</h2></div>
+    <div class="garde">
+      <div>
+        <h3>Cuisine</h3>
+        <p>Six états de commande · expiration qui décompte sur les non-confirmées · chronomètre d'attente · bouton unique qui fait avancer l'état · détail livraison (étage, digicode, distance, frais, paiement au livreur) · ticket ESC/POS et ticket de modification · réglages d'impression · ruptures immédiates · charge du service · alerte sonore.</p>
+      </div>
+      <div>
+        <h3>Gérant</h3>
+        <p>Charge du service et phrase dite au client · arrêt 30 minutes · chiffres du jour · journal des appels et rejeu d'un appel avec transcription et panier · SMS récapitulatif · carte, options obligatoires, suppléments, allergènes, ruptures, import · voix de l'assistant, voix signature, appel test · horaires et exceptions · zone de livraison · abonnement et compteur de minutes.</p>
+      </div>
+      <div>
+        <h3>Commercial</h3>
+        <p>Secteur et cibles · huit statuts · réservation de trois jours qui décompte, retour au commun, blocage de deux mois · preuves de visite (appel pro, message, photo de devanture sans visages ni plaques) · rappel · essai gratuit · ne plus contacter · pitch, objections, démo d'appel · commission de 7,50 € par client actif, gains, entonnoir.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ------------------------------------------------------------- -->
+  <section>
+    <div class="sec-n"><span class="num">03</span><h2>Ce que j'ai regardé</h2></div>
+    <div class="refs">
+      <p><b>KDS en cuisine.</b> Les guides d'implantation convergent : écran lu à deux mètres, <em>pas de défilement</em> (mains grasses), commandes en grille, minuteurs et alertes d'expiration, tri par station, geste de « bump » unique. <a href="https://www.webstaurantstore.com/article/1002/kitchen-display-systems.html">WebstaurantStore</a>, <a href="https://ask4tea.com/insights/kitchen-display-system-best-practices">ask4tea</a>.</p>
+      <p><b>Vente terrain.</b> Trois philosophies opposées existent sur le marché : SPOTIO est <em>canvassing-first</em>, Badger Maps <em>route-first</em>, Map My Customers <em>map-first</em>. Les notes basses de SPOTIO sur mobile s'expliquent par « des fonctions au détriment de l'usage sur le terrain ». <a href="https://www.badgermapping.com/compare/spotio-vs-badger-maps/">Badger Maps</a>, <a href="https://lead-mapper.com/blog/best-field-sales-software">Lead Mapper</a>.</p>
+      <p><b>Densité et calme.</b> Linear assume une règle nette pour les interfaces denses : si un effet visuel entre en concurrence avec le contenu, on le supprime. <a href="https://mdx.so/blog/ui-ux-design-trends-2026-whats-actually-changing">MDX</a>.</p>
+      <p><b>Sortie du tableau de bord.</b> La tendance 2026 va du « mur de métriques » vers des écrans de décision : hiérarchie claire, chemin direct de l'information à l'action. <a href="https://www.uxpin.com/studio/blog/ui-ux-design-trends/">UXPin</a>.</p>
+    </div>
+  </section>
+
+  <!-- ------------------------------------------------------------- -->
+  <section>
+    <div class="sec-n"><span class="num">04</span><h2>Les neuf directions</h2></div>
+
+    <div class="app-bloc">
+      <div class="app-titre"><h2>Cuisine</h2><span class="but">Un outil de production. Lisible à deux mètres, touché avec les mains grasses.</span></div>
+      <div class="dirs">
+        <div class="dir"><span class="lettre">A</span><h3>Rail</h3><p>Le rail de tickets papier. Fond clair, bandes pleine largeur, angles vifs, la bande entière est le bouton.</p></div>
+        <div class="dir"><span class="lettre">B</span><h3>Colonnes de service</h3><p>Trois colonnes fixes — à faire, en cours, prêtes. Graphite mat, jaune de sécurité réservé à l'urgent.</p></div>
+        <div class="dir"><span class="lettre">C</span><h3>Tableau de production</h3><p>L'afficheur de gare. Une seule table, lignes hautes, minuteurs géants, presque monochrome.</p></div>
+      </div>
+      <a class="voir" href="cuisine.html">Voir les trois maquettes cuisine</a>
+    </div>
+
+    <div class="app-bloc">
+      <div class="app-titre"><h2>Gérant</h2><span class="but">Calme, élégant, très clair. Aucune urgence visuelle.</span></div>
+      <div class="dirs">
+        <div class="dir"><span class="lettre">A</span><h3>Journal du soir</h3><p>Une page de quotidien. Ivoire, serif éditorial, les chiffres dans le texte, filets fins, pas un seul encadré.</p></div>
+        <div class="dir"><span class="lettre">B</span><h3>Console silencieuse</h3><p>Un thermostat haut de gamme. Anthracite mat, cuivre, un seul geste dominant par écran, hiérarchie par la taille.</p></div>
+        <div class="dir"><span class="lettre">C</span><h3>Fiche d'établissement</h3><p>La rigueur d'un back-office financier. Blanc, grille stricte, lignes clé/valeur alignées, chiffres tabulaires.</p></div>
+      </div>
+      <a class="voir" href="gerant.html">Voir les trois maquettes gérant</a>
+    </div>
+
+    <div class="app-bloc">
+      <div class="app-titre"><h2>Commercial</h2><span class="but">Debout, dehors, une main occupée. Où je vais, et quoi faire en arrivant.</span></div>
+      <div class="dirs">
+        <div class="dir"><span class="lettre">A</span><h3>Carte d'abord</h3><p>La carte prend tout l'écran, une feuille glissante porte la liste. Couleurs urbaines, points pleins, une action flottante.</p></div>
+        <div class="dir"><span class="lettre">B</span><h3>Pile du jour</h3><p>Une fiche plein écran à la fois, trois gestes. La couleur de fond porte le statut.</p></div>
+        <div class="dir"><span class="lettre">C</span><h3>Carnet de tournée</h3><p>Aucune carte. Liste dense, marqueurs textuels, balayage pour agir. L'outil de quelqu'un qui connaît son métier.</p></div>
+      </div>
+      <a class="voir" href="commercial.html">Voir les trois maquettes commercial</a>
+    </div>
+  </section>
+
+  <!-- ------------------------------------------------------------- -->
+  <section>
+    <div class="decision">
+      <p class="q">Une direction par application — elles n'ont pas besoin d'être les mêmes lettres.</p>
+      <p>Le mélange est volontaire : rien n'oblige la cuisine et le gérant à partager une langue visuelle, puisque ce ne sont ni les mêmes personnes, ni le même moment, ni le même geste. Dis-moi trois lettres, et je remplace entièrement le HTML et le CSS des écrans concernés, en gardant les fonctions telles quelles, avec vérification sur téléphone et sur tablette, sur une branche dédiée.</p>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>
