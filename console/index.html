@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Pelyo · Console</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="console.css?v=1.0.0-489fe03">
+<link rel="icon" href="logo.png">
+<meta name="robots" content="noindex, nofollow"><script>window.PELYO_ENV={nom:"LABO",version:"v1.0.0",detail:"v1.0.0+489fe03"};</script><style>.envb{display:inline-flex;align-items:center;flex:none;margin-left:7px;padding:2px 6px;border-radius:6px;vertical-align:2px;background:#4F8BD4;color:#0B0B0C;font:600 8.5px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em;white-space:nowrap}b:has(>.envb-nom){display:flex!important;align-items:center;min-width:0}.envb-nom{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0} print{.envb{display:none}}</style></head>
+<body>
+<div class="c-app">
+  <header class="c-top">
+    <div class="c-brand"><img src="logo.png" alt=""><b>Pelyo</b><span>Console</span></div>
+    <div class="c-tape" aria-label="Comptes en direct"><div class="c-tape-in" id="tape"></div></div>
+    <div class="c-top-right">
+      <span class="c-live"><i></i><b id="appels">0</b> appels en cours</span>
+      <span class="c-demo" title="Toutes les données affichées sont fictives">Démo</span>
+      <time id="horloge">--:--:--</time>
+    </div>
+  </header>
+  <nav class="c-nav" id="nav">
+    <small class="c-nav-titre">Pilotage</small>
+    <a href="#marche" data-page="marche"><svg viewBox="0 0 24 24"><path d="M3 17l5-6 4 3 5-7 4 4"/><path d="M3 21h18"/></svg>Vue d'ensemble</a>
+    <a href="#comptes" data-page="comptes"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/></svg>Comptes<em id="nb-comptes"></em></a>
+    <small class="c-nav-titre">Relation</small>
+    <a href="#boite" data-page="boite"><svg viewBox="0 0 24 24"><path d="M3 6h18v12H3z"/><path d="M3 7l9 6 9-6"/></svg>Boîte mail<em id="nb-mails"></em></a>
+    <a href="#avis" data-page="avis"><svg viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg>Avis<em id="nb-avis"></em></a>
+    <a href="#ia" data-page="ia"><svg viewBox="0 0 24 24"><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/><circle cx="12" cy="12" r="5"/></svg>Assistant IA</a>
+    <small class="c-nav-titre">Finances</small>
+    <a href="#chiffres" data-page="chiffres"><svg viewBox="0 0 24 24"><path d="M5 21V10M12 21V4M19 21v-7"/></svg>Chiffres</a>
+    <div class="c-nav-bas">
+      <div class="c-profil"><span>HR</span><p><b>Hayden Rouet</b><small>Fondateur · accès complet</small></p></div>
+      <p>Lecture seule sur les comptes : toute action passe par ta validation.</p>
+    </div>
+  </nav>
+  <main class="c-main" id="main"></main>
+  <aside class="c-volet" id="volet" aria-hidden="true"></aside>
+</div>
+<div class="c-toast" id="toast" role="status"></div>
+<div class="c-porte" id="porte" hidden></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js" integrity="sha384-Rj26LVGvoeRVR6+mwQmFfcR3QOBEwT+ZmuCWpuiqeTzJpCs0ER4ITAWGb4Hiy3Ok" crossorigin="anonymous"></script>
+<script src="demo.js?v=1.0.0-489fe03"></script>
+<script src="reel.js?v=1.0.0-489fe03"></script>
+</body>
+</html>
