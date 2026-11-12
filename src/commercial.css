@@ -1,0 +1,7 @@
+/* =========================================================================
+   Pelyo — espace COMMERCIAL : l'assistant Pelyo en plein écran.
+   Le style de l'assistant est dans base.css (.aide, .ac-*) ; ici, seulement
+   sa place dans la page.
+   ========================================================================= */
+.m-assistant{position:absolute;inset:0;display:flex;flex-direction:column}
+.m-assistant .aide.ac-page{animation:none}

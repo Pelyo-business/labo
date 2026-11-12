@@ -1,0 +1,38 @@
+# Pelyo — version « labo » (la plus récente)
+
+> Pelyo est un logiciel pour les restaurants rapides : une IA décroche le téléphone et prend les commandes, un écran de cuisine les affiche, un espace gérant pilote le restaurant, une application livreur gère les livraisons.
+> English: Pelyo is software for fast-food restaurants — an AI answers the phone and takes orders; a kitchen screen, a manager space and a delivery-driver app complete it.
+
+Ce site est la version « labo » : la dernière version, reconstruite à chaque modification. Elle peut être instable. Ce n'est pas la version des clients.
+
+## Trouver LA DERNIÈRE version
+
+- Numéro et date de construction (toujours à jour) : https://pelyo-business.github.io/labo/version.json
+  - champ `affichage` : par exemple `v0.12.1+49c1040` (numéro de version + empreinte du commit)
+  - champ `construit_le` : date et heure de la dernière construction
+- Dans l'application, le même numéro s'affiche en bas des Réglages de la cuisine, à côté de « démo ».
+- Une copie (capture, fichier, page enregistrée) est à jour seulement si son numéro est celui de `version.json`.
+
+## Les applications (versions de démonstration, données fictives)
+
+- Écran cuisine : https://pelyo-business.github.io/labo/demo-cuisine.html
+- Espace gérant : https://pelyo-business.github.io/labo/demo.html
+
+Versions avec comptes (une connexion est demandée) :
+- Cuisine : https://pelyo-business.github.io/labo/cuisine.html
+- Gérant : https://pelyo-business.github.io/labo/gerant.html
+- Commercial : https://pelyo-business.github.io/labo/commercial.html
+
+## Les trois étages
+
+| Étage | Adresse | Rôle |
+|---|---|---|
+| labo | https://pelyo-business.github.io/labo/ | dernière version, en cours de travail |
+| test | https://pelyo-business.github.io/test/ | préproduction : validation avant d'envoyer aux clients |
+| production | https://app.pelyo.eu | version des clients — pas encore publiée |
+
+## Où est le code
+
+- Dépôt privé `Pelyo-business/app` (branche `dev`) : la source de vérité ; accès sur invitation. Ses fichiers `README.md`, `AGENTS.md` et `CLAUDE.md` expliquent comment s'y retrouver.
+- Le dossier `maquette/` de ce dépôt contient le code des trois applications (JavaScript ES5 sans compilation, une feuille de style par application). Ce site-ci n'en est que la publication : les fichiers servis ici sont exactement ceux du dossier `maquette/`.
+- Aucun secret n'est publié ici.
