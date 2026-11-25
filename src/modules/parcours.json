@@ -1,0 +1,38 @@
+{
+  "packs": [
+    {"id": "kebab-tacos", "ordre": 10, "nom": "Kebab et tacos",
+     "accroche": "Beaucoup d’appels au rush, des habitués, de la livraison.",
+     "modules": ["heures-de-pointe", "fidelite", "anti-gaspi", "livraison", "uber_eats", "lien_qr"]},
+    {"id": "pizzeria", "ordre": 20, "nom": "Pizzeria",
+     "accroche": "Les soirs de match et de week-end, sans perdre un appel.",
+     "modules": ["heures-de-pointe", "fidelite", "livraison", "uber_eats", "deliveroo", "lien_qr"]},
+    {"id": "burger", "ordre": 30, "nom": "Burger",
+     "accroche": "Des clients qui commandent partout, y compris depuis ChatGPT.",
+     "modules": ["heures-de-pointe", "fidelite", "anti-gaspi", "assistant_ia", "uber_eats", "lien_qr"]},
+    {"id": "dark-kitchen", "ordre": 40, "nom": "Dark kitchen",
+     "accroche": "Toutes les plateformes dans une seule cuisine.",
+     "modules": ["uber_eats", "deliveroo", "just_eat", "heures-de-pointe", "caisse"]},
+    {"id": "zero-appel-rate", "ordre": 50, "nom": "Je ne rate plus d’appels",
+     "accroche": "L’assistant répond, la cuisine garde le rythme.",
+     "modules": ["ia_telephone", "heures-de-pointe", "whatsapp"]},
+    {"id": "plus-de-clients", "ordre": 60, "nom": "Plus de clients",
+     "accroche": "Faire revenir vos habitués et attirer de nouveaux clients.",
+     "modules": ["fidelite", "assistant_ia", "lien_qr", "anti-gaspi", "avis_google"]}
+  ],
+  "questions": [
+    {"id": "appels-rates", "ordre": 10, "texte": "Vous ratez des appels pendant le rush ?",
+     "modules": ["heures-de-pointe"], "pourquoi": "L’Anti-rush propose une heure plus calme au lieu de perdre le client."},
+    {"id": "habitues", "ordre": 20, "texte": "Vous voulez faire revenir vos habitués ?",
+     "modules": ["fidelite"], "pourquoi": "Un SMS avec leur commande habituelle, un OUI suffit."},
+    {"id": "gaspillage", "ordre": 30, "texte": "Vous jetez des produits en fin de service ?",
+     "modules": ["anti-gaspi"], "pourquoi": "Ce qui reste se vend par SMS au lieu d’être jeté."},
+    {"id": "chatgpt", "ordre": 40, "texte": "Vous voulez que vos clients puissent commander depuis ChatGPT ?",
+     "modules": ["assistant_ia"], "pourquoi": "La commande arrive en cuisine comme les autres."},
+    {"id": "lien-qr", "ordre": 45, "texte": "Vous voulez que vos clients commandent avec un QR code (vitrine, tables, flyers) ?",
+     "modules": ["lien_qr"], "pourquoi": "Une page de commande à vous, sans commission, la commande arrive en cuisine."},
+    {"id": "plateformes", "ordre": 50, "texte": "Vous êtes sur Uber Eats, Deliveroo ou Just Eat ?",
+     "modules": ["uber_eats", "deliveroo", "just_eat"], "pourquoi": "Leurs commandes arrivent dans la même cuisine, branchées avec l’équipe Pelyo."},
+    {"id": "avis", "ordre": 60, "texte": "Vous voulez plus d’avis Google ?",
+     "modules": ["avis_google"], "pourquoi": "Un SMS demande un avis après une commande réussie (bientôt)."}
+  ]
+}

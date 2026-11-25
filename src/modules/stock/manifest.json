@@ -1,0 +1,95 @@
+{
+  "id": "stock",
+  "version": "1.0.0",
+  "api": 1,
+  "famille": "modules",
+  "ordre": 150,
+  "nom": "Stock et ingrédients",
+  "accroche": "Vos ingrédients se décomptent tout seuls. Épuisé, le produit passe en rupture.",
+  "statut": "disponible",
+  "cycle": "gerant",
+  "prix": {
+    "mensuel_cents": 1200,
+    "essai_jours": 14,
+    "inclus": "Ingrédients, alertes et historique sans limite"
+  },
+  "requiert": [],
+  "recommande": [],
+  "origine": null,
+  "reglages": {
+    "decrementer_a": {
+      "type": "choix",
+      "valeurs": ["confirmee", "terminee"],
+      "defaut": "confirmee",
+      "libelle": "Décompter à la confirmation ou à la remise de la commande",
+      "erreur": "Choisissez « à la confirmation » ou « à la remise »."
+    },
+    "auto_rupture": {
+      "type": "booleen",
+      "defaut": true,
+      "libelle": "Mettre automatiquement en rupture un ingrédient épuisé",
+      "erreur": "Réglage invalide."
+    },
+    "alerte_jours": {
+      "type": "entier",
+      "min": 1,
+      "max": 30,
+      "defaut": 2,
+      "libelle": "Prévenir quand il reste moins de … jours de stock",
+      "erreur": "Le délai d'alerte va de 1 à 30 jours."
+    }
+  },
+  "permissions": [
+    "commandes:lire",
+    "carte:lire"
+  ],
+  "slots": [],
+  "ecoute": [
+    "commande.creee",
+    "commande.confirmee",
+    "commande.terminee",
+    "commande.annulee"
+  ],
+  "emet": [],
+  "etat_source": null,
+  "sonde": "sonde_stock",
+  "nettoyage": "nettoyer_stock",
+  "desinstallation": "garder_reglages",
+  "ui": null,
+  "fichiers": {
+    "migrations": [
+      "supabase/migrations/20261203090000_module_stock.sql",
+      "supabase/migrations/20261203091000_stock_servable_canaux.sql"
+    ],
+    "tests": [
+      "supabase/tests/zzzzzzzzzzzzzzzzzzzzzzzzzzz_stock.sql"
+    ],
+    "fonction": null,
+    "doc": "README.md",
+    "savoir": [
+      "gerant-stock"
+    ]
+  },
+  "presentation": {
+    "icone": "M4 7l8-4 8 4v10l-8 4-8-4zM4 7l8 4 8-4M12 11v10",
+    "ou": "Gestion › Stock et ingrédients",
+    "ia": false,
+    "lien": "stock",
+    "lienTexte": "Ouvrir le stock",
+    "scene": [
+      ["client", "Trois tacos poulet arrivent en cuisine."],
+      ["effet", "Le stock descend : poulet 4,2 kg, galettes 38."],
+      ["effet", "Plus de poulet : les tacos poulet passent en rupture tout seuls."]
+    ],
+    "etapes": [
+      "Vous indiquez ce que vous avez en stock, une fois.",
+      "Chaque commande retire ce qu'elle a utilisé, selon vos recettes.",
+      "Épuisé, l'ingrédient et les produits qui l'utilisent passent en rupture ; ils reviennent quand vous réapprovisionnez."
+    ],
+    "gain": {
+      "nb": 8,
+      "quoi": "commandes évitées sur un produit déjà épuisé",
+      "eur": 150
+    }
+  }
+}

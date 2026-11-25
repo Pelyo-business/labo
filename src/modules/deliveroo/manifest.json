@@ -1,0 +1,65 @@
+{
+  "id": "deliveroo",
+  "version": "1.0.0",
+  "api": 1,
+  "famille": "plateformes",
+  "ordre": 50,
+  "nom": "Deliveroo",
+  "accroche": "Les commandes Deliveroo arrivent directement en cuisine.",
+  "statut": "disponible",
+  "cycle": "integration",
+  "prix": null,
+  "requiert": [],
+  "recommande": [],
+  "origine": "deliveroo",
+  "reglages": {},
+  "permissions": [
+    "commandes:creer"
+  ],
+  "slots": [],
+  "ecoute": [],
+  "emet": [
+    "commande.creee"
+  ],
+  "etat_source": "etat_deliveroo",
+  "sonde": "sonde_plateforme",
+  "nettoyage": null,
+  "desinstallation": "garder_reglages",
+  "ui": null,
+  "fichiers": {
+    "migrations": [
+      "supabase/migrations/20261109100000_commandes_plateformes.sql",
+      "supabase/migrations/20261204090000_plateformes_connexion.sql"
+    ],
+    "tests": [
+      "supabase/tests/zzzzzzzzzzzzzzzzzzz_commandes_plateformes.sql",
+      "supabase/tests/zzzzzzzzzzzzzzzzzzzzzzzzzzz_plateformes_connexion.sql"
+    ],
+    "fonction": "supabase/functions/commande-externe",
+    "doc": "README.md",
+    "savoir": [
+      "commandes-plateformes"
+    ]
+  },
+  "presentation": {
+    "icone": "M6 8h12l-1 12H7zM9 8V6a3 3 0 0 1 6 0v2",
+    "canal": true,
+    "info": "plateformes",
+    "equipe": false,
+    "integration": {
+      "nom": "Deliveroo",
+      "intermediaires": [
+        "HubRise",
+        "Deliverect",
+        "Otter"
+      ],
+      "accord": "Deliveroo ouvre l'accès à ses commandes aux partenaires qu'elle autorise. Le plus simple : passer par un intermédiaire qui relaie les commandes d'Uber Eats, Deliveroo et Just Eat vers Pelyo.",
+      "etapes": [
+        "Touchez « Brancher Deliveroo » : Pelyo vous remet une clé secrète, une seule fois. Copiez-la tout de suite.",
+        "Dans l'outil qui relaie vos commandes (votre intermédiaire ou l'accès partenaire de la plateforme), choisissez d'envoyer les commandes à une adresse, et collez l'adresse de réception ci-dessous.",
+        "Ajoutez la clé en en-tête de chaque envoi : Authorization: Bearer pelyo_…",
+        "Revenez ici et touchez « Envoyer une commande d'essai » : elle doit arriver en cuisine, puis s'effacer."
+      ]
+    }
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "id": "assistant_ia",
+  "version": "1.0.0",
+  "api": 1,
+  "famille": "canaux",
+  "ordre": 20,
+  "nom": "Commande par ChatGPT",
+  "accroche": "Vos clients commandent depuis ChatGPT, la commande arrive en cuisine.",
+  "statut": "disponible",
+  "cycle": "gerant",
+  "prix": null,
+  "requiert": [],
+  "recommande": [],
+  "origine": "assistant_ia",
+  "reglages": {
+    "max_par_heure": {
+      "type": "entier",
+      "min": 1,
+      "max": 60,
+      "defaut": 6,
+      "libelle": "Plafond de commandes par heure",
+      "erreur": "Le plafond par heure va de 1 à 60."
+    }
+  },
+  "permissions": [
+    "commandes:creer",
+    "carte:lire",
+    "restaurant:lire"
+  ],
+  "slots": [],
+  "ecoute": [],
+  "emet": [
+    "commande.creee"
+  ],
+  "etat_source": null,
+  "sonde": "sonde_assistant_ia",
+  "nettoyage": null,
+  "desinstallation": "garder_reglages",
+  "ui": null,
+  "fichiers": {
+    "migrations": [
+      "supabase/migrations/20261110100000_assistant_ia.sql",
+      "supabase/migrations/20261111090000_assistant_ia_verifier.sql"
+    ],
+    "tests": [
+      "supabase/tests/zzzzzzzzzzzzzzzzzzzz_assistant_ia.sql"
+    ],
+    "fonction": "supabase/functions/assistant-ia",
+    "doc": "README.md",
+    "savoir": [
+      "connexions"
+    ]
+  },
+  "presentation": {
+    "icone": "M12 3l1.8 4.7 4.7 1.8-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8zM19 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z",
+    "canal": true,
+    "pilote": true,
+    "info": "chatgpt"
+  }
+}

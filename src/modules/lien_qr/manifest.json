@@ -1,0 +1,60 @@
+{
+  "id": "lien_qr",
+  "version": "1.0.0",
+  "api": 1,
+  "famille": "canaux",
+  "ordre": 25,
+  "nom": "Commande par lien et QR code",
+  "accroche": "Vos clients commandent depuis un lien ou un QR code, la commande arrive en cuisine.",
+  "statut": "disponible",
+  "cycle": "gerant",
+  "prix": null,
+  "requiert": [],
+  "recommande": [],
+  "origine": "lien_qr",
+  "reglages": {
+    "max_par_heure": {
+      "type": "entier",
+      "min": 1,
+      "max": 60,
+      "defaut": 20,
+      "libelle": "Plafond de commandes par heure",
+      "erreur": "Le plafond par heure va de 1 à 60."
+    }
+  },
+  "permissions": [
+    "commandes:creer",
+    "carte:lire",
+    "restaurant:lire"
+  ],
+  "slots": [],
+  "ecoute": [],
+  "emet": [
+    "commande.creee"
+  ],
+  "etat_source": null,
+  "sonde": "sonde_lien_qr",
+  "nettoyage": null,
+  "desinstallation": "garder_reglages",
+  "ui": null,
+  "fichiers": {
+    "migrations": [
+      "supabase/migrations/20261202090000_origine_lien_qr.sql",
+      "supabase/migrations/20261202100000_module_lien_qr.sql"
+    ],
+    "tests": [
+      "supabase/tests/zzzzzzzzzzzzzzzzzzzzzzzzzzz_lien_qr.sql"
+    ],
+    "fonction": "supabase/functions/commande-lien",
+    "doc": "README.md",
+    "savoir": [
+      "lien-qr"
+    ]
+  },
+  "presentation": {
+    "icone": "M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 14h2v2h-2zM14 18h2v2h-2zM18 18h2v2h-2z",
+    "canal": true,
+    "pilote": true,
+    "info": "lien_qr"
+  }
+}

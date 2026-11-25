@@ -1,0 +1,42 @@
+{
+  "id": "whatsapp",
+  "version": "1.0.0",
+  "api": 1,
+  "famille": "canaux",
+  "ordre": 30,
+  "nom": "Commande par WhatsApp",
+  "accroche": "Le client écrit ou envoie un vocal, Pelyo prend la commande.",
+  "statut": "bientot",
+  "cycle": "gerant",
+  "prix": null,
+  "requiert": [],
+  "recommande": [],
+  "origine": null,
+  "reglages": {},
+  "permissions": [
+    "commandes:creer",
+    "sms:envoyer"
+  ],
+  "slots": [],
+  "ecoute": [],
+  "emet": [
+    "commande.creee"
+  ],
+  "etat_source": null,
+  "sonde": null,
+  "nettoyage": null,
+  "desinstallation": "garder_reglages",
+  "ui": null,
+  "fichiers": {
+    "migrations": [],
+    "tests": [],
+    "fonction": null,
+    "doc": "README.md",
+    "savoir": [
+      "whatsapp"
+    ]
+  },
+  "presentation": {
+    "icone": "M4 20l1.3-4A8 8 0 1 1 8 18.7zM9.5 9.5c.3 2.2 2.3 4.2 4.5 4.5"
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "id": "anti-gaspi",
+  "version": "1.0.0",
+  "api": 1,
+  "famille": "modules",
+  "ordre": 120,
+  "nom": "Fin de service sans perte",
+  "accroche": "Ce qui reste en fin de service se vend au lieu d’être jeté.",
+  "statut": "disponible",
+  "cycle": "gerant",
+  "prix": {
+    "mensuel_cents": 1400,
+    "essai_jours": 14,
+    "inclus": "100 SMS compris"
+  },
+  "requiert": [],
+  "recommande": [
+    "sms"
+  ],
+  "origine": null,
+  "reglages": {},
+  "permissions": [
+    "carte:lire",
+    "restaurant:lire",
+    "clients:lire",
+    "commandes:modifier",
+    "sms:envoyer"
+  ],
+  "slots": [
+    "cuisine.carte",
+    "cuisine.clic",
+    "cuisine.arrivee",
+    "cuisine.etiquette"
+  ],
+  "ecoute": [
+    "rupture.changee"
+  ],
+  "emet": [],
+  "etat_source": null,
+  "sonde": null,
+  "nettoyage": null,
+  "desinstallation": "garder_reglages",
+  "ui": "index.js",
+  "fichiers": {
+    "migrations": [],
+    "tests": [],
+    "fonction": null,
+    "doc": "README.md",
+    "savoir": [
+      "extensions"
+    ]
+  },
+  "presentation": {
+    "icone": "M5 19c0-8 5-13 14-14-1 9-6 14-14 14zM5 19l7-7",
+    "ou": "Écran cuisine › Carte",
+    "scene": [
+      [
+        "sms",
+        "Il reste 6 tacos ce soir, −30 % jusqu’à 22 h 30. Répondez OUI pour en réserver un."
+      ],
+      [
+        "client",
+        "OUI"
+      ],
+      [
+        "effet",
+        "4 tacos vendus au lieu de partir à la poubelle"
+      ]
+    ],
+    "etapes": [
+      "La cuisine signale ce qui reste, en deux gestes.",
+      "Pelyo prévient vos habitués proches, ou tous vos clients.",
+      "Ils réservent par SMS jusqu’à la fermeture."
+    ],
+    "gain": {
+      "nb": 60,
+      "quoi": "produits vendus au lieu d’être jetés",
+      "eur": 290
+    }
+  }
+}

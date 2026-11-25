@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Page introuvable</title>
+<style>
+body{margin:0;display:grid;place-items:center;min-height:100vh;padding:24px;background:#F6F5F3;color:#1C1A18;font:16px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,system-ui,sans-serif;text-align:center}
+@media (prefers-color-scheme: dark){body{background:#0B0B0C;color:#F2EEE9}}
+p{color:#6F6A64}
+</style>
+<script>
+/* Les adresses « …/commander/<nom-du-restaurant> » n'existent pas comme fichiers : l'hébergement renvoie cette page, qui
+   envoie le client vers la page de commande avec le nom du restaurant. Ainsi l'adresse d'un QR code reste la même
+   quel que soit l'hébergement. Voir docs/COMMANDE-LIEN-QR.md. */
+(function(){
+  var m = /^(.*\/)commander\/([a-z0-9-]+)\/?$/.exec(location.pathname);
+  if (m) location.replace(m[1] + 'commander.html?r=' + m[2]);
+})();
+</script>
+<meta name="robots" content="noindex, nofollow"><script>window.PELYO_ENV={nom:"LABO",version:"v0.22.1",detail:"v0.22.1+8d0ee6e"};</script><style>.envb{display:inline-flex;align-items:center;flex:none;margin-left:7px;padding:1px 5px;border-radius:6px;vertical-align:2px;background:#4F8BD4;color:#0B0B0C;border:1px solid #4F8BD4;font:600 8.5px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em;white-space:nowrap}b:has(>.envb-nom){display:flex!important;align-items:center;min-width:0}.envb-nom{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0} print{.envb{display:none}}</style></head>
+<body>
+<main>
+  <h1>Page introuvable</h1>
+  <p>Ce lien ne correspond à aucune page.</p>
+</main>
+</body>
+</html>

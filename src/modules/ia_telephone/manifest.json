@@ -1,0 +1,50 @@
+{
+  "id": "ia_telephone",
+  "version": "1.0.0",
+  "api": 1,
+  "famille": "canaux",
+  "ordre": 10,
+  "nom": "Prise de commande au téléphone",
+  "accroche": "L’assistant répond aux appels et envoie la commande en cuisine.",
+  "statut": "disponible",
+  "cycle": "automatique",
+  "prix": null,
+  "requiert": [],
+  "recommande": [],
+  "origine": "ia_pelyo",
+  "reglages": {},
+  "permissions": [
+    "commandes:creer"
+  ],
+  "slots": [],
+  "ecoute": [],
+  "emet": [
+    "commande.creee"
+  ],
+  "etat_source": "etat_ia_telephone",
+  "sonde": null,
+  "nettoyage": null,
+  "desinstallation": "garder_reglages",
+  "ui": null,
+  "fichiers": {
+    "migrations": [
+      "supabase/migrations/20261114090000_connexions.sql"
+    ],
+    "tests": [
+      "supabase/tests/zzzzzzzzzzzzzzzzzzzzzzzzz_connexions.sql"
+    ],
+    "fonction": "appel/serveur",
+    "doc": "README.md",
+    "savoir": [
+      "trajet-appel",
+      "ce-que-sait-ia"
+    ]
+  },
+  "presentation": {
+    "icone": "M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A15 15 0 0 1 3 6a2 2 0 0 1 2-2z",
+    "canal": true,
+    "info": "canaux",
+    "lien": "routage",
+    "lienTexte": "Gestion des appels"
+  }
+}

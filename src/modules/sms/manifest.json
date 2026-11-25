@@ -1,0 +1,40 @@
+{
+  "id": "sms",
+  "version": "1.0.0",
+  "api": 1,
+  "famille": "equipement",
+  "ordre": 90,
+  "nom": "SMS aux clients",
+  "accroche": "Les messages envoyés à vos clients (relances, confirmations).",
+  "statut": "bientot",
+  "cycle": "gerant",
+  "prix": null,
+  "requiert": [],
+  "recommande": [],
+  "origine": null,
+  "reglages": {},
+  "permissions": [
+    "sms:envoyer",
+    "clients:lire"
+  ],
+  "slots": [],
+  "ecoute": [
+    "commande.confirmee"
+  ],
+  "emet": [],
+  "etat_source": null,
+  "sonde": null,
+  "nettoyage": null,
+  "desinstallation": "garder_reglages",
+  "ui": null,
+  "fichiers": {
+    "migrations": [],
+    "tests": [],
+    "fonction": null,
+    "doc": "README.md",
+    "savoir": []
+  },
+  "presentation": {
+    "icone": "M4 5h16v11H9l-5 4zM8 9h8M8 12h5"
+  }
+}

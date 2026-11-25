@@ -1,0 +1,84 @@
+{
+  "id": "fidelite",
+  "version": "1.0.0",
+  "api": 1,
+  "famille": "modules",
+  "ordre": 100,
+  "nom": "Relance des habitués",
+  "accroche": "Vos habitués recommandent en répondant OUI à un SMS.",
+  "statut": "disponible",
+  "cycle": "gerant",
+  "prix": {
+    "mensuel_cents": 2400,
+    "essai_jours": 14,
+    "inclus": "150 SMS compris"
+  },
+  "requiert": [],
+  "recommande": [
+    "sms"
+  ],
+  "origine": null,
+  "reglages": {},
+  "permissions": [
+    "clients:lire",
+    "restaurant:lire",
+    "commandes:modifier",
+    "sms:envoyer"
+  ],
+  "slots": [
+    "gerant.clients",
+    "gerant.clic",
+    "cuisine.arrivee"
+  ],
+  "ecoute": [
+    "commande.terminee",
+    "client.nouveau"
+  ],
+  "emet": [],
+  "etat_source": null,
+  "sonde": null,
+  "nettoyage": null,
+  "desinstallation": "garder_reglages",
+  "ui": "index.js",
+  "fichiers": {
+    "migrations": [],
+    "tests": [],
+    "fonction": null,
+    "doc": "README.md",
+    "savoir": [
+      "extensions"
+    ]
+  },
+  "presentation": {
+    "icone": "M4 5h16v11H9l-5 4zM9 10.5l2 2 4-4",
+    "ou": "Activité › Clients",
+    "scene": [
+      [
+        "sms",
+        "Karim, comme d’hab ce soir ? Tacos L poulet + Coca, 12,50 €. Répondez OUI."
+      ],
+      [
+        "client",
+        "OUI"
+      ],
+      [
+        "effet",
+        "La commande arrive en cuisine, sans un appel"
+      ]
+    ],
+    "etapes": [
+      "Pelyo repère les habitués qui tardent à revenir.",
+      "Il leur envoie leur commande habituelle par SMS.",
+      "Un OUI, et la commande part en cuisine."
+    ],
+    "gain": {
+      "nb": 32,
+      "quoi": "commandes en plus",
+      "eur": 610
+    }
+  },
+  "stockage_historique": [
+    "pelyo:gerant:commedhab",
+    "pelyo:gerant:commedhab-conf"
+  ]
+}

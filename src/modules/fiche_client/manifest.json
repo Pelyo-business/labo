@@ -1,0 +1,51 @@
+{
+  "id": "fiche_client",
+  "version": "1.0.0",
+  "api": 1,
+  "famille": "modules",
+  "ordre": 140,
+  "nom": "Fiche client unique",
+  "accroche": "Un même client reconnu sur tous vos canaux : ses habitudes, vos notes, son accord pour les SMS.",
+  "statut": "disponible",
+  "cycle": "automatique",
+  "prix": null,
+  "requiert": [],
+  "recommande": [],
+  "origine": null,
+  "reglages": {},
+  "permissions": [
+    "clients:lire"
+  ],
+  "slots": [],
+  "ecoute": [
+    "commande.creee",
+    "commande.confirmee",
+    "commande.terminee",
+    "commande.annulee"
+  ],
+  "emet": [],
+  "etat_source": "etat_fiche_client",
+  "sonde": "sonde_fiche_client",
+  "nettoyage": null,
+  "desinstallation": "garder_reglages",
+  "ui": null,
+  "fichiers": {
+    "migrations": [
+      "supabase/migrations/20261201090000_fiche_client.sql"
+    ],
+    "tests": [
+      "supabase/tests/zzzzzzzzzzzzzzzzzzzzzzzzzzzz_fiche_client.sql"
+    ],
+    "fonction": null,
+    "doc": "README.md",
+    "savoir": [
+      "fiche-client"
+    ]
+  },
+  "presentation": {
+    "icone": "M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 20a8 8 0 0 1 16 0",
+    "info": "clients",
+    "lien": "clients",
+    "lienTexte": "Ouvrir les clients"
+  }
+}

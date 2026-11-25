@@ -1,0 +1,81 @@
+{
+  "id": "heures-de-pointe",
+  "version": "1.0.0",
+  "api": 1,
+  "famille": "modules",
+  "ordre": 110,
+  "nom": "Anti-rush",
+  "accroche": "Quand la cuisine déborde, l’IA propose une heure plus calme.",
+  "statut": "disponible",
+  "cycle": "gerant",
+  "prix": {
+    "mensuel_cents": 1200,
+    "essai_jours": 14,
+    "inclus": "Aucun SMS"
+  },
+  "requiert": [],
+  "recommande": [
+    "ia_telephone"
+  ],
+  "origine": null,
+  "reglages": {},
+  "permissions": [
+    "cuisine:lire",
+    "commandes:modifier"
+  ],
+  "slots": [
+    "cuisine.rythme",
+    "cuisine.clic",
+    "cuisine.phraseIA",
+    "cuisine.arrivee",
+    "cuisine.promesse",
+    "cuisine.etiquette"
+  ],
+  "ecoute": [
+    "charge.changee",
+    "commande.confirmee"
+  ],
+  "emet": [],
+  "etat_source": null,
+  "sonde": null,
+  "nettoyage": null,
+  "desinstallation": "garder_reglages",
+  "ui": "index.js",
+  "fichiers": {
+    "migrations": [],
+    "tests": [],
+    "fonction": null,
+    "doc": "README.md",
+    "savoir": [
+      "extensions"
+    ]
+  },
+  "presentation": {
+    "icone": "M12 21a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM12 9v4l3 2M9 2h6",
+    "ou": "Écran cuisine › Rythme",
+    "scene": [
+      [
+        "voix",
+        "Il y a du monde : prêt dans 35 min, ou à 20 h 15 avec la boisson offerte. Vous préférez ?"
+      ],
+      [
+        "client",
+        "20 h 15, parfait"
+      ],
+      [
+        "effet",
+        "Le client reste, la cuisine souffle"
+      ]
+    ],
+    "etapes": [
+      "Dès 80 % de la capacité, l’IA le voit.",
+      "Elle propose une heure plus calme, avec un petit geste.",
+      "La cuisine lance la commande juste à temps."
+    ],
+    "gain": {
+      "nb": 18,
+      "quoi": "clients gardés pendant le rush",
+      "eur": 340
+    }
+  }
+}

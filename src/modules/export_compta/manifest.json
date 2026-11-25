@@ -1,0 +1,81 @@
+{
+  "id": "export_compta",
+  "version": "1.0.0",
+  "api": 1,
+  "famille": "modules",
+  "ordre": 160,
+  "nom": "Export comptable",
+  "accroche": "Votre chiffre d'affaires et votre TVA, jour par jour, prêts pour votre comptable.",
+  "statut": "disponible",
+  "cycle": "gerant",
+  "prix": {
+    "mensuel_cents": 600,
+    "essai_jours": 14,
+    "inclus": "Exports CSV et écran, sur la période de votre choix"
+  },
+  "requiert": [],
+  "recommande": [],
+  "origine": null,
+  "reglages": {
+    "tva_retrait": {
+      "type": "choix",
+      "valeurs": ["0", "2.1", "5.5", "10", "20"],
+      "defaut": "10",
+      "libelle": "TVA sur les ventes à emporter",
+      "erreur": "Taux possibles : 0, 2,1, 5,5, 10 ou 20 %."
+    },
+    "tva_livraison": {
+      "type": "choix",
+      "valeurs": ["0", "2.1", "5.5", "10", "20"],
+      "defaut": "10",
+      "libelle": "TVA sur les ventes en livraison (et ses frais)",
+      "erreur": "Taux possibles : 0, 2,1, 5,5, 10 ou 20 %."
+    }
+  },
+  "permissions": [
+    "commandes:lire"
+  ],
+  "slots": [],
+  "ecoute": [],
+  "emet": [],
+  "etat_source": null,
+  "sonde": null,
+  "nettoyage": null,
+  "desinstallation": "garder_reglages",
+  "ui": null,
+  "fichiers": {
+    "migrations": [
+      "supabase/migrations/20261203100000_module_export_compta.sql"
+    ],
+    "tests": [
+      "supabase/tests/zzzzzzzzzzzzzzzzzzzzzzzzzzzz_export_compta.sql"
+    ],
+    "fonction": null,
+    "doc": "README.md",
+    "savoir": [
+      "gerant-export-compta"
+    ]
+  },
+  "presentation": {
+    "icone": "M6 3h9l4 4v14H6zM14 3v5h5M9 9h2M9 13h6M9 17h6",
+    "ou": "Gestion › Export comptable",
+    "ia": false,
+    "lien": "compta",
+    "lienTexte": "Ouvrir l'export comptable",
+    "scene": [
+      ["client", "Fin de mois : votre comptable réclame le chiffre d'affaires."],
+      ["effet", "Vous choisissez le mois et touchez « Télécharger le CSV »."],
+      ["effet", "Ventes par jour, par canal et par taux de TVA, annulations à part."]
+    ],
+    "etapes": [
+      "Vous vérifiez les taux de TVA (10 % par défaut, modifiables par catégorie).",
+      "Vous choisissez la période : aujourd'hui, la semaine, le mois ou des dates précises.",
+      "Vous touchez « Télécharger le CSV » et vous l'envoyez à votre comptable."
+    ],
+    "gain": {
+      "nb": 2,
+      "quoi": "heures de saisie évitées chaque mois",
+      "eur": 60
+    }
+  }
+}
